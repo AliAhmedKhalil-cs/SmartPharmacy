@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smartpharmacy-api
+  labels:
+    app: smartpharmacy
+spec:
+  replicas: {{ .Values.api.replicas }}
+  selector:
+    matchLabels:
+      app: smartpharmacy
+      tier: api
+  template:
+    metadata:
+      labels:
+        app: smartpharmacy
+        tier: api
+    spec:
+      containers:
+        - name: api
+          image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              value: "{{ .Values.api.env.DATABASE_URL }}"
+            - name: REDIS_URL
+              value: "{{ .Values.api.env.REDIS_URL }}"
+            - name: PORT
+              value: "{{ .Values.api.env.PORT }}"
+            - name: OCR_LANG
+              value: "{{ .Values.api.env.OCR_LANG }}"
+            - name: APP_NAME
+              value: "{{ .Values.api.env.APP_NAME }}"
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: {{ .Values.api.resources.requests.cpu }}
+              memory: {{ .Values.api.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.api.resources.limits.cpu }}
+              memory: {{ .Values.api.resources.limits.memory }}
+      terminationGracePeriodSeconds: 30

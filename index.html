@@ -1,0 +1,46 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SmartPharmacy — بحث الأدوية</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">SmartPharmacy</div>
+    <div class="slogan">محرك بحث الأدوية</div>
+  </header>
+
+  <main class="container">
+    <section class="search-card">
+      <div class="search-row">
+        <input id="q" placeholder="اكتب اسم الدواء واضغط Enter للبحث..." autocomplete="off" />
+        <div style="display:flex;gap:8px;align-items:center">
+          <label style="color:#ddd">حساسية (مثال: paracetamol): <input id="allergen" type="text" placeholder="اكتب مكوّن للحساسية"/></label>
+          <select id="per_page"><option>10</option><option>25</option><option selected>50</option></select>
+        </div>
+      </div>
+      <div class="controls">
+        <div id="status" class="status">جاهز</div>
+      </div>
+    </section>
+
+    <section class="results-grid">
+      <div class="col">
+        <h3>تطابقات مباشرة</h3>
+        <div id="exact" class="list"></div>
+        <div id="pager-exact" class="pager"></div>
+      </div>
+      <div class="col">
+        <h3>تشابه (fuzzy)</h3>
+        <div id="fuzzy" class="list"></div>
+        <div id="pager-fuzzy" class="pager"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">منفذ الخادم: <span id="port-indicator">—</span></footer>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

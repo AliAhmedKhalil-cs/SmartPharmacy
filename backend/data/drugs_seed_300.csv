@@ -1,0 +1,301 @@
+trade_name,active_ingredient,strength,form,manufacturer,pack_size,otc
+Voltaren Junior,Diclofenac,500 mg,capsule,LocalMed21,30 tabs,FALSE
+Brufen Plus,Ibuprofen,500 mg,ointment,Abbott25,15 ml,FALSE
+Azithro Junior,Azithromycin,250 mg,gel,Novartis17,50 g,FALSE
+Brufen Extra,Ibuprofen,200 mg,tablet,Abbott38,15 ml,FALSE
+Panadol Rapid,Paracetamol,100 mg/5ml,syrup,GSK43,100 ml,TRUE
+Panadol Rapid,Paracetamol,100 mg/5ml,gel,Abbott12,100 ml,FALSE
+Algamed Rapid,Alginate,100 mg/5ml,drops,LocalMed5,10 tabs,TRUE
+Telfast Extra,Fexofenadine,500 mg,tablet,GSK19,10 tabs,TRUE
+Voltaren Rapid,Diclofenac,500 mg,drops,GSK24,15 ml,FALSE
+Voltaren Rapid,Diclofenac,50 mg,ointment,Abbott6,15 ml,FALSE
+Telfast Junior,Fexofenadine,200 mg,capsule,Abbott17,15 ml,TRUE
+Algamed,Alginate,1%,capsule,PharmaCo32,100 ml,FALSE
+Telfast Plus,Fexofenadine,100 mg/5ml,drops,GSK20,20 tabs,TRUE
+Augmentin Extra,Amoxicillin+Clav,200 mg,tablet,Abbott23,10 tabs,FALSE
+Telfast,Fexofenadine,1%,syrup,Abbott43,10 tabs,FALSE
+Azithro Plus,Azithromycin,250 mg,syrup,Abbott10,30 tabs,FALSE
+Azithro Rapid,Azithromycin,250 mg,capsule,Abbott34,50 g,TRUE
+Augmentin,Amoxicillin+Clav,100 mg/5ml,ointment,AstraZeneca40,100 ml,FALSE
+Telfast Plus,Fexofenadine,200 mg,gel,PharmaCo25,15 ml,FALSE
+Panadol Junior,Paracetamol,50 mg,capsule,LocalMed17,10 tabs,FALSE
+Omeprazole Plus,Omeprazole,500 mg,ointment,Novartis7,10 tabs,FALSE
+Omeprazole Junior,Omeprazole,250 mg,ointment,AstraZeneca21,15 ml,FALSE
+Omeprazole Plus,Omeprazole,250 mg,gel,Abbott48,30 tabs,TRUE
+Omeprazole Rapid,Omeprazole,100 mg/5ml,tablet,Novartis10,10 tabs,FALSE
+Cipro Extra,Ciprofloxacin,50 mg,gel,Novartis19,30 tabs,TRUE
+Azithro Extra,Azithromycin,250 mg,gel,Abbott27,100 ml,FALSE
+Algamed,Alginate,50 mg,tablet,AstraZeneca36,50 g,FALSE
+Augmentin Extra,Amoxicillin+Clav,50 mg,gel,Novartis29,100 ml,TRUE
+Panadol Junior,Paracetamol,100 mg/5ml,capsule,Novartis20,10 tabs,FALSE
+Voltaren Rapid,Diclofenac,100 mg/5ml,gel,Abbott15,100 ml,TRUE
+Azithro Junior,Azithromycin,250 mg,capsule,LocalMed45,30 tabs,FALSE
+Panadol Junior,Paracetamol,200 mg,ointment,GSK15,20 tabs,TRUE
+Panadol Junior,Paracetamol,100 mg/5ml,ointment,Novartis20,10 tabs,FALSE
+Algamed Plus,Alginate,50 mg,capsule,PharmaCo1,20 tabs,TRUE
+Telfast Rapid,Fexofenadine,250 mg,gel,Abbott27,10 tabs,TRUE
+Amoxicillin Extra,Amoxicillin,1%,ointment,Abbott28,50 g,TRUE
+Azithro Extra,Azithromycin,1%,capsule,PharmaCo49,20 tabs,FALSE
+Amoxicillin,Amoxicillin,200 mg,tablet,GSK46,50 g,TRUE
+Panadol Rapid,Paracetamol,50 mg,gel,LocalMed23,50 g,FALSE
+Telfast Extra,Fexofenadine,1%,ointment,AstraZeneca22,50 g,TRUE
+Augmentin Plus,Amoxicillin+Clav,250 mg,tablet,Abbott47,50 g,TRUE
+Azithro Rapid,Azithromycin,1%,syrup,GSK11,10 tabs,TRUE
+Voltaren,Diclofenac,50 mg,drops,Novartis50,100 ml,FALSE
+Omeprazole Plus,Omeprazole,250 mg,capsule,Abbott44,30 tabs,FALSE
+Telfast Rapid,Fexofenadine,100 mg/5ml,syrup,PharmaCo35,50 g,TRUE
+Cipro,Ciprofloxacin,100 mg/5ml,gel,AstraZeneca19,30 tabs,TRUE
+Omeprazole Junior,Omeprazole,200 mg,drops,PharmaCo46,10 tabs,TRUE
+Panadol,Paracetamol,1%,ointment,Abbott25,50 g,FALSE
+Cipro Rapid,Ciprofloxacin,250 mg,ointment,PharmaCo49,30 tabs,TRUE
+Augmentin Plus,Amoxicillin+Clav,50 mg,syrup,Abbott6,15 ml,FALSE
+Amoxicillin Plus,Amoxicillin,500 mg,gel,GSK18,10 tabs,TRUE
+Brufen,Ibuprofen,100 mg/5ml,tablet,Novartis17,15 ml,FALSE
+Panadol Extra,Paracetamol,50 mg,gel,AstraZeneca42,15 ml,TRUE
+Augmentin Rapid,Amoxicillin+Clav,1%,drops,AstraZeneca16,10 tabs,FALSE
+Amoxicillin Junior,Amoxicillin,500 mg,syrup,LocalMed42,10 tabs,FALSE
+Telfast Plus,Fexofenadine,500 mg,capsule,LocalMed40,50 g,TRUE
+Cipro Plus,Ciprofloxacin,100 mg/5ml,ointment,GSK30,10 tabs,FALSE
+Omeprazole Plus,Omeprazole,1%,gel,Novartis49,20 tabs,FALSE
+Panadol Extra,Paracetamol,500 mg,drops,Novartis22,10 tabs,FALSE
+Cipro Rapid,Ciprofloxacin,100 mg/5ml,syrup,GSK43,30 tabs,FALSE
+Amoxicillin Plus,Amoxicillin,100 mg/5ml,capsule,LocalMed37,50 g,TRUE
+Panadol,Paracetamol,50 mg,syrup,LocalMed23,10 tabs,TRUE
+Azithro,Azithromycin,500 mg,ointment,GSK16,50 g,TRUE
+Omeprazole Junior,Omeprazole,100 mg/5ml,gel,LocalMed23,50 g,FALSE
+Amoxicillin,Amoxicillin,50 mg,gel,GSK21,20 tabs,FALSE
+Cipro Plus,Ciprofloxacin,1%,gel,Abbott20,20 tabs,FALSE
+Cipro Plus,Ciprofloxacin,1%,capsule,AstraZeneca33,50 g,FALSE
+Algamed Extra,Alginate,1%,capsule,Novartis2,10 tabs,TRUE
+Omeprazole Plus,Omeprazole,500 mg,gel,Abbott17,15 ml,FALSE
+Amoxicillin Rapid,Amoxicillin,250 mg,capsule,Abbott23,30 tabs,TRUE
+Omeprazole Junior,Omeprazole,250 mg,gel,Abbott42,15 ml,FALSE
+Algamed,Alginate,1%,syrup,Novartis35,30 tabs,FALSE
+Azithro Plus,Azithromycin,500 mg,syrup,Novartis50,100 ml,TRUE
+Cipro Extra,Ciprofloxacin,100 mg/5ml,capsule,AstraZeneca41,50 g,FALSE
+Voltaren Plus,Diclofenac,100 mg/5ml,syrup,AstraZeneca17,50 g,TRUE
+Cipro Junior,Ciprofloxacin,100 mg/5ml,gel,LocalMed48,20 tabs,TRUE
+Brufen Junior,Ibuprofen,250 mg,drops,Novartis20,20 tabs,FALSE
+Azithro Plus,Azithromycin,50 mg,tablet,Novartis34,20 tabs,FALSE
+Panadol Rapid,Paracetamol,50 mg,capsule,PharmaCo1,50 g,TRUE
+Azithro Extra,Azithromycin,100 mg/5ml,tablet,PharmaCo3,30 tabs,FALSE
+Voltaren,Diclofenac,1%,gel,PharmaCo20,20 tabs,FALSE
+Azithro Rapid,Azithromycin,250 mg,ointment,LocalMed18,30 tabs,FALSE
+Voltaren Rapid,Diclofenac,500 mg,ointment,LocalMed29,30 tabs,FALSE
+Algamed Plus,Alginate,1%,drops,Abbott47,10 tabs,TRUE
+Voltaren Junior,Diclofenac,200 mg,tablet,AstraZeneca34,15 ml,TRUE
+Voltaren Junior,Diclofenac,1%,gel,Abbott7,30 tabs,FALSE
+Panadol Plus,Paracetamol,1%,ointment,GSK25,50 g,TRUE
+Panadol Extra,Paracetamol,100 mg/5ml,gel,AstraZeneca40,10 tabs,FALSE
+Panadol Plus,Paracetamol,250 mg,gel,LocalMed48,15 ml,FALSE
+Azithro Rapid,Azithromycin,250 mg,tablet,AstraZeneca33,10 tabs,TRUE
+Voltaren,Diclofenac,250 mg,capsule,PharmaCo18,30 tabs,FALSE
+Omeprazole Rapid,Omeprazole,50 mg,drops,Abbott15,50 g,TRUE
+Cipro Rapid,Ciprofloxacin,500 mg,drops,LocalMed49,100 ml,FALSE
+Augmentin Plus,Amoxicillin+Clav,200 mg,tablet,Abbott36,100 ml,FALSE
+Omeprazole Plus,Omeprazole,200 mg,ointment,Novartis32,50 g,FALSE
+Telfast Junior,Fexofenadine,500 mg,tablet,AstraZeneca23,30 tabs,FALSE
+Amoxicillin Plus,Amoxicillin,250 mg,syrup,Abbott1,10 tabs,TRUE
+Omeprazole,Omeprazole,200 mg,capsule,Novartis15,50 g,TRUE
+Cipro Junior,Ciprofloxacin,100 mg/5ml,tablet,Novartis32,50 g,TRUE
+Cipro Rapid,Ciprofloxacin,50 mg,tablet,Abbott19,20 tabs,TRUE
+Telfast Extra,Fexofenadine,500 mg,gel,LocalMed47,20 tabs,FALSE
+Augmentin Rapid,Amoxicillin+Clav,1%,syrup,LocalMed33,30 tabs,TRUE
+Algamed Rapid,Alginate,1%,capsule,Abbott35,100 ml,TRUE
+Brufen Rapid,Ibuprofen,100 mg/5ml,tablet,PharmaCo19,30 tabs,TRUE
+Voltaren Rapid,Diclofenac,250 mg,ointment,PharmaCo29,20 tabs,FALSE
+Cipro,Ciprofloxacin,250 mg,drops,LocalMed42,10 tabs,FALSE
+Azithro,Azithromycin,500 mg,tablet,Novartis46,100 ml,FALSE
+Telfast,Fexofenadine,200 mg,drops,GSK45,50 g,TRUE
+Telfast,Fexofenadine,250 mg,syrup,PharmaCo9,20 tabs,TRUE
+Azithro Junior,Azithromycin,1%,tablet,Novartis40,50 g,FALSE
+Brufen Plus,Ibuprofen,200 mg,ointment,Abbott1,50 g,TRUE
+Azithro Junior,Azithromycin,500 mg,tablet,GSK25,20 tabs,TRUE
+Telfast Extra,Fexofenadine,50 mg,drops,LocalMed37,10 tabs,TRUE
+Voltaren Rapid,Diclofenac,50 mg,tablet,AstraZeneca13,100 ml,FALSE
+Omeprazole Rapid,Omeprazole,100 mg/5ml,gel,LocalMed7,10 tabs,TRUE
+Amoxicillin Extra,Amoxicillin,1%,tablet,Novartis10,20 tabs,FALSE
+Brufen Plus,Ibuprofen,50 mg,syrup,AstraZeneca31,100 ml,TRUE
+Azithro Junior,Azithromycin,200 mg,capsule,PharmaCo35,10 tabs,FALSE
+Voltaren Plus,Diclofenac,100 mg/5ml,tablet,Novartis37,10 tabs,FALSE
+Panadol Plus,Paracetamol,50 mg,ointment,GSK7,100 ml,FALSE
+Augmentin Rapid,Amoxicillin+Clav,50 mg,gel,GSK46,50 g,FALSE
+Panadol Extra,Paracetamol,50 mg,capsule,GSK49,100 ml,TRUE
+Amoxicillin Plus,Amoxicillin,1%,drops,GSK47,100 ml,TRUE
+Telfast,Fexofenadine,50 mg,capsule,LocalMed29,20 tabs,FALSE
+Azithro,Azithromycin,250 mg,tablet,GSK19,20 tabs,FALSE
+Brufen Junior,Ibuprofen,200 mg,syrup,PharmaCo23,10 tabs,TRUE
+Algamed Extra,Alginate,200 mg,syrup,PharmaCo3,15 ml,FALSE
+Amoxicillin Extra,Amoxicillin,1%,capsule,Novartis10,10 tabs,FALSE
+Omeprazole Rapid,Omeprazole,250 mg,syrup,GSK5,100 ml,FALSE
+Panadol Rapid,Paracetamol,200 mg,tablet,PharmaCo49,20 tabs,FALSE
+Augmentin Plus,Amoxicillin+Clav,200 mg,drops,LocalMed11,30 tabs,TRUE
+Brufen Junior,Ibuprofen,100 mg/5ml,gel,AstraZeneca30,20 tabs,FALSE
+Cipro Rapid,Ciprofloxacin,200 mg,syrup,PharmaCo1,10 tabs,FALSE
+Omeprazole Plus,Omeprazole,200 mg,gel,AstraZeneca25,20 tabs,FALSE
+Brufen Extra,Ibuprofen,50 mg,drops,PharmaCo15,50 g,FALSE
+Voltaren Junior,Diclofenac,250 mg,gel,GSK26,10 tabs,FALSE
+Telfast,Fexofenadine,50 mg,drops,LocalMed38,30 tabs,FALSE
+Voltaren Junior,Diclofenac,500 mg,syrup,LocalMed27,50 g,TRUE
+Voltaren Junior,Diclofenac,500 mg,drops,LocalMed8,50 g,TRUE
+Cipro Junior,Ciprofloxacin,1%,tablet,GSK47,10 tabs,TRUE
+Azithro Plus,Azithromycin,100 mg/5ml,syrup,Abbott31,15 ml,FALSE
+Omeprazole Rapid,Omeprazole,500 mg,gel,PharmaCo2,30 tabs,TRUE
+Panadol Extra,Paracetamol,1%,drops,Abbott48,30 tabs,TRUE
+Omeprazole,Omeprazole,200 mg,syrup,AstraZeneca46,30 tabs,TRUE
+Algamed,Alginate,100 mg/5ml,drops,LocalMed33,100 ml,TRUE
+Amoxicillin,Amoxicillin,100 mg/5ml,gel,GSK40,10 tabs,FALSE
+Telfast Rapid,Fexofenadine,1%,tablet,Abbott36,100 ml,TRUE
+Telfast Rapid,Fexofenadine,50 mg,drops,GSK35,20 tabs,TRUE
+Brufen Plus,Ibuprofen,1%,tablet,GSK33,10 tabs,FALSE
+Augmentin,Amoxicillin+Clav,50 mg,drops,PharmaCo28,100 ml,FALSE
+Brufen,Ibuprofen,500 mg,gel,Novartis1,30 tabs,FALSE
+Augmentin Extra,Amoxicillin+Clav,500 mg,ointment,LocalMed15,15 ml,FALSE
+Brufen,Ibuprofen,250 mg,drops,AstraZeneca36,20 tabs,TRUE
+Voltaren Extra,Diclofenac,500 mg,drops,Novartis35,15 ml,TRUE
+Voltaren Rapid,Diclofenac,200 mg,capsule,GSK50,50 g,FALSE
+Algamed Extra,Alginate,1%,tablet,LocalMed48,50 g,TRUE
+Panadol,Paracetamol,500 mg,ointment,LocalMed39,15 ml,FALSE
+Augmentin,Amoxicillin+Clav,100 mg/5ml,capsule,LocalMed41,20 tabs,FALSE
+Telfast Extra,Fexofenadine,100 mg/5ml,capsule,LocalMed2,20 tabs,FALSE
+Voltaren Rapid,Diclofenac,1%,ointment,Abbott28,100 ml,TRUE
+Amoxicillin Extra,Amoxicillin,1%,syrup,Abbott41,100 ml,TRUE
+Cipro Junior,Ciprofloxacin,50 mg,drops,Novartis38,30 tabs,FALSE
+Algamed Extra,Alginate,100 mg/5ml,drops,PharmaCo23,100 ml,TRUE
+Voltaren,Diclofenac,200 mg,ointment,Abbott17,15 ml,FALSE
+Augmentin Extra,Amoxicillin+Clav,100 mg/5ml,drops,AstraZeneca7,50 g,FALSE
+Cipro,Ciprofloxacin,100 mg/5ml,drops,AstraZeneca36,100 ml,FALSE
+Panadol Plus,Paracetamol,200 mg,drops,GSK11,50 g,FALSE
+Brufen,Ibuprofen,200 mg,ointment,GSK11,20 tabs,FALSE
+Augmentin,Amoxicillin+Clav,500 mg,syrup,AstraZeneca3,30 tabs,TRUE
+Brufen Extra,Ibuprofen,250 mg,drops,PharmaCo35,20 tabs,TRUE
+Algamed Rapid,Alginate,250 mg,tablet,LocalMed14,100 ml,TRUE
+Omeprazole Extra,Omeprazole,50 mg,gel,AstraZeneca13,20 tabs,FALSE
+Augmentin Extra,Amoxicillin+Clav,100 mg/5ml,syrup,Abbott43,20 tabs,FALSE
+Voltaren Junior,Diclofenac,250 mg,drops,AstraZeneca9,15 ml,TRUE
+Omeprazole Plus,Omeprazole,50 mg,syrup,GSK42,100 ml,FALSE
+Voltaren Rapid,Diclofenac,200 mg,tablet,Novartis37,20 tabs,FALSE
+Augmentin Junior,Amoxicillin+Clav,200 mg,drops,Abbott13,50 g,TRUE
+Panadol Rapid,Paracetamol,500 mg,tablet,Abbott27,15 ml,FALSE
+Augmentin Rapid,Amoxicillin+Clav,500 mg,ointment,Novartis41,15 ml,TRUE
+Amoxicillin Plus,Amoxicillin,250 mg,drops,GSK29,50 g,FALSE
+Augmentin Plus,Amoxicillin+Clav,100 mg/5ml,drops,GSK43,30 tabs,FALSE
+Azithro Plus,Azithromycin,250 mg,ointment,Abbott50,50 g,TRUE
+Amoxicillin Rapid,Amoxicillin,50 mg,ointment,LocalMed38,100 ml,TRUE
+Omeprazole,Omeprazole,50 mg,capsule,Novartis4,50 g,TRUE
+Omeprazole Plus,Omeprazole,1%,capsule,AstraZeneca42,10 tabs,TRUE
+Augmentin Plus,Amoxicillin+Clav,1%,syrup,Abbott48,15 ml,TRUE
+Augmentin Junior,Amoxicillin+Clav,100 mg/5ml,ointment,PharmaCo14,100 ml,TRUE
+Azithro Junior,Azithromycin,500 mg,capsule,Novartis25,50 g,FALSE
+Panadol,Paracetamol,500 mg,tablet,Abbott41,15 ml,FALSE
+Algamed Extra,Alginate,500 mg,gel,GSK47,100 ml,FALSE
+Brufen Plus,Ibuprofen,100 mg/5ml,gel,GSK46,30 tabs,FALSE
+Telfast Rapid,Fexofenadine,200 mg,capsule,PharmaCo39,20 tabs,FALSE
+Panadol Plus,Paracetamol,1%,tablet,GSK44,30 tabs,TRUE
+Omeprazole,Omeprazole,200 mg,drops,PharmaCo6,15 ml,FALSE
+Augmentin,Amoxicillin+Clav,500 mg,tablet,GSK20,10 tabs,TRUE
+Algamed Junior,Alginate,1%,drops,GSK45,50 g,FALSE
+Brufen Plus,Ibuprofen,50 mg,drops,GSK7,10 tabs,TRUE
+Augmentin,Amoxicillin+Clav,200 mg,drops,GSK38,10 tabs,FALSE
+Azithro Junior,Azithromycin,200 mg,drops,AstraZeneca4,15 ml,FALSE
+Brufen Extra,Ibuprofen,250 mg,tablet,PharmaCo43,100 ml,FALSE
+Cipro Junior,Ciprofloxacin,200 mg,tablet,PharmaCo7,30 tabs,FALSE
+Augmentin Extra,Amoxicillin+Clav,100 mg/5ml,ointment,LocalMed3,15 ml,FALSE
+Omeprazole Extra,Omeprazole,50 mg,drops,Abbott34,10 tabs,TRUE
+Panadol,Paracetamol,100 mg/5ml,drops,PharmaCo23,50 g,FALSE
+Algamed Rapid,Alginate,200 mg,tablet,PharmaCo47,50 g,TRUE
+Omeprazole Extra,Omeprazole,250 mg,capsule,AstraZeneca16,20 tabs,FALSE
+Voltaren,Diclofenac,50 mg,syrup,GSK3,50 g,FALSE
+Panadol Extra,Paracetamol,250 mg,tablet,Abbott49,50 g,FALSE
+Algamed Plus,Alginate,50 mg,tablet,LocalMed1,30 tabs,TRUE
+Azithro,Azithromycin,1%,syrup,Novartis23,10 tabs,FALSE
+Omeprazole,Omeprazole,500 mg,gel,Novartis4,100 ml,TRUE
+Omeprazole Junior,Omeprazole,500 mg,ointment,PharmaCo1,50 g,FALSE
+Telfast Extra,Fexofenadine,200 mg,drops,AstraZeneca8,50 g,FALSE
+Telfast Plus,Fexofenadine,200 mg,syrup,GSK11,100 ml,TRUE
+Algamed Junior,Alginate,250 mg,ointment,PharmaCo45,10 tabs,FALSE
+Telfast Plus,Fexofenadine,50 mg,ointment,PharmaCo45,20 tabs,TRUE
+Azithro,Azithromycin,250 mg,gel,AstraZeneca47,30 tabs,TRUE
+Augmentin Junior,Amoxicillin+Clav,250 mg,drops,Novartis28,15 ml,TRUE
+Azithro,Azithromycin,50 mg,gel,GSK38,15 ml,TRUE
+Cipro Plus,Ciprofloxacin,500 mg,syrup,Novartis40,10 tabs,TRUE
+Azithro,Azithromycin,200 mg,ointment,PharmaCo37,50 g,FALSE
+Azithro Plus,Azithromycin,250 mg,capsule,LocalMed28,10 tabs,TRUE
+Panadol Extra,Paracetamol,1%,capsule,GSK9,10 tabs,FALSE
+Amoxicillin Rapid,Amoxicillin,500 mg,drops,PharmaCo36,100 ml,TRUE
+Amoxicillin Rapid,Amoxicillin,200 mg,gel,Abbott20,20 tabs,TRUE
+Voltaren Junior,Diclofenac,50 mg,capsule,Abbott42,30 tabs,FALSE
+Algamed Plus,Alginate,250 mg,drops,LocalMed17,100 ml,TRUE
+Amoxicillin Junior,Amoxicillin,50 mg,gel,AstraZeneca23,20 tabs,FALSE
+Omeprazole Junior,Omeprazole,200 mg,gel,GSK39,100 ml,FALSE
+Voltaren Rapid,Diclofenac,500 mg,syrup,AstraZeneca25,100 ml,TRUE
+Omeprazole Rapid,Omeprazole,200 mg,syrup,LocalMed34,100 ml,FALSE
+Panadol Extra,Paracetamol,250 mg,drops,Abbott4,20 tabs,FALSE
+Panadol Junior,Paracetamol,50 mg,drops,GSK7,20 tabs,TRUE
+Cipro Junior,Ciprofloxacin,500 mg,syrup,Abbott18,20 tabs,FALSE
+Voltaren,Diclofenac,500 mg,drops,AstraZeneca28,100 ml,TRUE
+Panadol Extra,Paracetamol,200 mg,capsule,GSK2,30 tabs,FALSE
+Panadol Plus,Paracetamol,100 mg/5ml,syrup,GSK1,20 tabs,TRUE
+Panadol Junior,Paracetamol,250 mg,capsule,AstraZeneca8,100 ml,TRUE
+Cipro Rapid,Ciprofloxacin,1%,gel,LocalMed26,10 tabs,FALSE
+Algamed,Alginate,500 mg,tablet,LocalMed6,100 ml,FALSE
+Brufen Rapid,Ibuprofen,250 mg,capsule,GSK17,50 g,FALSE
+Algamed Plus,Alginate,250 mg,capsule,Novartis42,20 tabs,TRUE
+Algamed Plus,Alginate,500 mg,ointment,AstraZeneca19,15 ml,FALSE
+Amoxicillin Rapid,Amoxicillin,1%,drops,PharmaCo17,30 tabs,FALSE
+Omeprazole Extra,Omeprazole,1%,tablet,Novartis6,30 tabs,TRUE
+Azithro Junior,Azithromycin,100 mg/5ml,capsule,GSK18,30 tabs,FALSE
+Cipro Plus,Ciprofloxacin,500 mg,ointment,Abbott33,20 tabs,FALSE
+Augmentin Extra,Amoxicillin+Clav,1%,drops,Abbott44,10 tabs,FALSE
+Telfast Rapid,Fexofenadine,250 mg,tablet,Novartis10,30 tabs,FALSE
+Panadol Rapid,Paracetamol,200 mg,gel,Abbott15,15 ml,TRUE
+Telfast Junior,Fexofenadine,100 mg/5ml,gel,PharmaCo25,15 ml,FALSE
+Algamed Plus,Alginate,50 mg,drops,Abbott8,30 tabs,FALSE
+Omeprazole Rapid,Omeprazole,250 mg,capsule,AstraZeneca32,20 tabs,FALSE
+Panadol Extra,Paracetamol,50 mg,ointment,PharmaCo28,50 g,FALSE
+Algamed Extra,Alginate,200 mg,drops,GSK5,100 ml,TRUE
+Brufen,Ibuprofen,250 mg,syrup,Abbott16,30 tabs,TRUE
+Voltaren Plus,Diclofenac,500 mg,ointment,GSK50,15 ml,FALSE
+Algamed Junior,Alginate,50 mg,capsule,Novartis12,100 ml,FALSE
+Brufen Rapid,Ibuprofen,50 mg,gel,Abbott18,15 ml,FALSE
+Algamed Extra,Alginate,250 mg,syrup,AstraZeneca1,15 ml,FALSE
+Algamed Rapid,Alginate,50 mg,tablet,GSK2,20 tabs,FALSE
+Cipro Rapid,Ciprofloxacin,50 mg,gel,LocalMed44,30 tabs,FALSE
+Panadol Extra,Paracetamol,500 mg,ointment,AstraZeneca34,15 ml,FALSE
+Brufen Extra,Ibuprofen,200 mg,ointment,GSK14,30 tabs,TRUE
+Algamed Junior,Alginate,50 mg,syrup,Novartis34,50 g,TRUE
+Azithro Extra,Azithromycin,200 mg,ointment,LocalMed37,15 ml,FALSE
+Telfast Rapid,Fexofenadine,250 mg,syrup,AstraZeneca50,100 ml,FALSE
+Algamed Junior,Alginate,250 mg,gel,Abbott34,10 tabs,FALSE
+Voltaren Plus,Diclofenac,200 mg,ointment,PharmaCo28,50 g,TRUE
+Voltaren Plus,Diclofenac,250 mg,ointment,LocalMed45,100 ml,FALSE
+Telfast Rapid,Fexofenadine,100 mg/5ml,tablet,GSK43,10 tabs,TRUE
+Augmentin,Amoxicillin+Clav,250 mg,tablet,LocalMed33,15 ml,TRUE
+Brufen Plus,Ibuprofen,50 mg,capsule,AstraZeneca42,15 ml,FALSE
+Telfast Extra,Fexofenadine,250 mg,syrup,AstraZeneca24,30 tabs,TRUE
+Amoxicillin Junior,Amoxicillin,100 mg/5ml,ointment,Abbott21,30 tabs,TRUE
+Brufen Plus,Ibuprofen,50 mg,ointment,LocalMed44,10 tabs,FALSE
+Telfast Plus,Fexofenadine,250 mg,drops,AstraZeneca6,30 tabs,FALSE
+Azithro Junior,Azithromycin,200 mg,syrup,PharmaCo39,10 tabs,TRUE
+Amoxicillin,Amoxicillin,500 mg,gel,PharmaCo8,100 ml,FALSE
+Augmentin Extra,Amoxicillin+Clav,250 mg,syrup,Abbott4,30 tabs,FALSE
+Voltaren Plus,Diclofenac,50 mg,ointment,GSK36,30 tabs,FALSE
+Augmentin Extra,Amoxicillin+Clav,250 mg,gel,GSK27,15 ml,FALSE
+Amoxicillin Rapid,Amoxicillin,50 mg,drops,GSK48,30 tabs,FALSE
+Omeprazole Rapid,Omeprazole,1%,syrup,Abbott8,100 ml,TRUE
+Algamed Plus,Alginate,200 mg,capsule,Novartis39,100 ml,TRUE
+Omeprazole Junior,Omeprazole,250 mg,drops,LocalMed21,20 tabs,TRUE
+Panadol Plus,Paracetamol,100 mg/5ml,gel,LocalMed21,20 tabs,FALSE
+Algamed Plus,Alginate,500 mg,tablet,LocalMed5,100 ml,FALSE
+Azithro Junior,Azithromycin,1%,capsule,AstraZeneca15,30 tabs,TRUE
+Brufen Junior,Ibuprofen,100 mg/5ml,syrup,GSK49,15 ml,FALSE
+Amoxicillin Extra,Amoxicillin,200 mg,tablet,LocalMed24,10 tabs,TRUE
+Azithro Rapid,Azithromycin,200 mg,syrup,Abbott43,20 tabs,TRUE
+Brufen Extra,Ibuprofen,500 mg,capsule,GSK38,20 tabs,TRUE
+Telfast Extra,Fexofenadine,250 mg,capsule,AstraZeneca44,30 tabs,TRUE
+Brufen Extra,Ibuprofen,250 mg,ointment,Novartis35,15 ml,TRUE
+Amoxicillin Extra,Amoxicillin,100 mg/5ml,tablet,Novartis23,100 ml,TRUE
+Cipro Plus,Ciprofloxacin,250 mg,tablet,PharmaCo29,50 g,FALSE
+Augmentin,Amoxicillin+Clav,1%,syrup,Abbott32,15 ml,TRUE
+Azithro Rapid,Azithromycin,200 mg,ointment,Novartis2,15 ml,TRUE
+Telfast Plus,Fexofenadine,50 mg,tablet,Novartis19,15 ml,FALSE

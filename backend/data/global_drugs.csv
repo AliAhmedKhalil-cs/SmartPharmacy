@@ -1,0 +1,21 @@
+trade_name,active_ingredient,avg_price,currency,country,image_url
+Panadol,Paracetamol,18,EGP,EG,https://example.com/images/panadol.jpg
+Panadol Extra,Paracetamol + Caffeine,22,EGP,EG,https://example.com/images/panadol-extra.jpg
+Augmentin,Amoxicillin + Clavulanic acid,80,EGP,EG,https://example.com/images/augmentin.jpg
+Amoxil,Amoxicillin,45,EGP,EG,https://example.com/images/amoxil.jpg
+Cataflam,Diclofenac Potassium,30,EGP,EG,https://example.com/images/cataflam.jpg
+Voltaren,Diclofenac,42.5,EGP,EG,https://example.com/images/voltaren.jpg
+Brufen,Ibuprofen,35,EGP,EG,https://example.com/images/brufen.jpg
+Aspirin,Aspirin,15,EGP,EG,https://example.com/images/aspirin.jpg
+Congestal,Paracetamol + Pseudoephedrine + Chlorpheniramine,28,EGP,EG,https://example.com/images/congestal.jpg
+Telfast,Fexofenadine,60,EGP,EG,https://example.com/images/telfast.jpg
+Claritin,Loratadine,50,EGP,EG,https://example.com/images/claritin.jpg
+Zyrtec,Cetirizine,48,EGP,EG,https://example.com/images/zyrtec.jpg
+Plavix,Clopidogrel,210,EGP,EG,https://example.com/images/plavix.jpg
+Lipitor,Atorvastatin,190,EGP,EG,https://example.com/images/lipitor.jpg
+Glucophage,Metformin,30,EGP,EG,https://example.com/images/glucophage.jpg
+Januvia,Sitagliptin,320,EGP,EG,https://example.com/images/januvia.jpg
+Diovan,Valsartan,250,EGP,EG,https://example.com/images/diovan.jpg
+Lasix,Furosemide,35,EGP,EG,https://example.com/images/lasix.jpg
+Crestor,Rosuvastatin,280,EGP,EG,https://example.com/images/crestor.jpg
+Mucosolvan,Ambroxol,40,EGP,EG,https://example.com/images/mucosolvan.jpg

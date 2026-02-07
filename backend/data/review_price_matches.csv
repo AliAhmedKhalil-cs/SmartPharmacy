@@ -1,0 +1,4 @@
+price_name,price,matched_drug_id,matched_trade_name,similarity
+"Voltaren",42.5,30,"Voltaren",1
+"Panadol night",18,295,"Panadol night",1
+"Pantopon",25,296,"Pantopon",1

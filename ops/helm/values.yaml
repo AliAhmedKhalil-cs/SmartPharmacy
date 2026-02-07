@@ -1,0 +1,47 @@
+global:
+  imagePullPolicy: IfNotPresent
+
+api:
+  image:
+    repository: your-dockerhub/smartpharmacy-api
+    tag: latest
+  replicas: 2
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1024Mi"
+  env:
+    DATABASE_URL: postgresql://smartpharmacy:smartpharmacy@postgresql.smartpharmacy.svc.cluster.local:5432/smartpharmacy
+    REDIS_URL: redis://redis-master.smartpharmacy.svc.cluster.local:6379
+    PORT: "3000"
+    OCR_LANG: ara+eng
+    APP_NAME: SmartPharmacy
+
+web:
+  image:
+    repository: your-dockerhub/smartpharmacy-web
+    tag: latest
+  replicas: 2
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: smartpharmacy.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: smartpharmacy-tls
+      hosts:
+        - smartpharmacy.example.com

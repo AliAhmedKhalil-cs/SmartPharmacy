@@ -1,0 +1,7 @@
+| trade_name  | active_ingredient | strength | form    | manufacturer | pack_size | otc   |
+| ----------- | ----------------- | -------- | ------- | ------------ | --------- | ----- |
+| Panadol     | Paracetamol       | 500 mg   | tablet  | GSK          | 10 tabs   | TRUE  |
+| Brufen      | Ibuprofen         | 200 mg   | tablet  | Abbott       | 10 tabs   | TRUE  |
+| Amoxicillin | Amoxicillin       | 500 mg   | capsule | AstraZeneca  | 10 caps   | FALSE |
+| Augmentin   | Amoxicillin+Clav  | 625 mg   | tablet  | GSK          | 10 tabs   | FALSE |
+| Voltaren    | Diclofenac        | 50 mg    | tablet  | Novartis     | 10 tabs   | TRUE  |

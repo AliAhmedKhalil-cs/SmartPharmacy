@@ -1,0 +1,4 @@
+trade_name,active_ingredient,strength,form,manufacturer,typical_pack_size,avg_price_egp,therapeutic_group,legal_notes,categories_ar,aliases,is_brand,country,currency,source
+Paracetamol,Paracetamol,500mg,Tablet,,20 tabs,,Analgesic,,مسكنات|خافض حرارة,acetaminophen|باراسيتامول|paracetamol,false,,EGP,wikidata
+Ibuprofen,Ibuprofen,200mg,Tablet,,20 tabs,,NSAID,,مسكنات|مضادات التهاب,ايبوبروفين|ibuprofen,false,,EGP,wikidata
+Amoxicillin,Amoxicillin,500mg,Capsule,,16 caps,,Antibiotic,,مضادات حيوية,amoxicillin|اموكسيسيلين,false,,EGP,wikidata
