@@ -1,14 +1,61 @@
-import { parsePatientContext, readJsonBody, sendError, sendOk } from './_util'
+export const runtime = 'nodejs'
+
+function sendJson(res: any, status: number, payload: any) {
+  res.statusCode = status
+  res.setHeader('Content-Type', 'application/json; charset=utf-8')
+  res.end(JSON.stringify(payload))
+}
+
+function readBody(req: any): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let data = ''
+    req.on('data', (c: any) => (data += c))
+    req.on('end', () => resolve(data))
+    req.on('error', reject)
+  })
+}
+
+async function readJson(req: any) {
+  const raw = await readBody(req)
+  if (!raw) return {}
+  try {
+    return JSON.parse(raw)
+  } catch {
+    return {}
+  }
+}
 
 function keyFromEnv() {
-  const k = String(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim()
-  return k
+  return String(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim()
 }
 
 function looksLikeKey(k: string) {
   if (!k) return false
   if (k.length < 30) return false
   return /^[A-Za-z0-9_\-]+$/.test(k)
+}
+
+function normalizeList(v: any) {
+  if (!v) return []
+  if (Array.isArray(v)) return v.map(x => String(x).trim()).filter(Boolean).slice(0, 50)
+  return String(v).split(',').map(s => s.trim()).filter(Boolean).slice(0, 50)
+}
+
+function parseCtx(ctx: any) {
+  const age = ctx?.age !== undefined ? Number(ctx.age) : undefined
+  const weightKg = ctx?.weightKg !== undefined ? Number(ctx.weightKg) : undefined
+  const sex = ctx?.sex ? String(ctx.sex) : undefined
+  const allergies = normalizeList(ctx?.allergies)
+  const conditions = normalizeList(ctx?.conditions)
+  const currentMeds = normalizeList(ctx?.currentMeds)
+  return {
+    age: Number.isFinite(age) ? age : undefined,
+    weightKg: Number.isFinite(weightKg) ? weightKg : undefined,
+    sex,
+    allergies,
+    conditions,
+    currentMeds
+  }
 }
 
 function ctxText(ctx: any) {
@@ -24,9 +71,9 @@ function ctxText(ctx: any) {
 
 function fallbackReply(message: string) {
   const m = message.toLowerCase()
-  if (m.includes('جرعة') || m.includes('dose')) return 'الجرعة بتعتمد على العمر والوزن والحالة. لو تقولي اسم الدوا + العمر/الوزن أقدر أديك نطاق جرعات شائع وامتى لازم ترجع لدكتور.'
-  if (m.includes('صداع') || m.includes('headache')) return 'للصداع الخفيف: باراسيتامول غالباً خيار آمن لمعظم الناس. لو عندك حساسية/قرحة/حمل أو الصداع شديد أو متكرر، الأفضل استشارة طبيب.'
-  if (m.includes('مضاد') || m.includes('antibi')) return 'المضاد الحيوي لازم يكون بوصفة، ومتوقفش قبل المدة إلا لو الدكتور قال. لو في حساسية/طفح/ضيق تنفس لازم طوارئ.'
+  if (m.includes('حساسي') || m.includes('allerg')) return 'تمام. قولّي الحساسية من اي مادة فعالة تحديدًا (زي paracetamol/ibuprofen) + سنك وأي أمراض مزمنة، وأنا أرشح بدائل OTC آمنة مع تحذيرات.'
+  if (m.includes('جرعة') || m.includes('dose')) return 'الجرعة بتعتمد على العمر والوزن والحالة. قولّي اسم الدوا + العمر/الوزن وأي أمراض مزمنة.'
+  if (m.includes('مضاد') || m.includes('antibi')) return 'المضاد الحيوي لازم بوصفة. لو فيه حساسية/طفح/ضيق نفس لازم طوارئ.'
   return 'تمام. احكيلي الأعراض أو اسم الدوا اللي بتسأل عنه، ولو عندك حساسية أو أمراض مزمنة قولّي عشان الرد يبقى أدق.'
 }
 
@@ -35,7 +82,6 @@ async function geminiReply(message: string, ctx: any) {
   if (!looksLikeKey(apiKey)) throw new Error('Invalid GEMINI_API_KEY')
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`
-
   const system = [
     'أنت مساعد صيدلي عربي مصري. اجاباتك قصيرة، عملية، وآمنة.',
     'ممنوع التشخيص القاطع أو وصف أدوية روشتة بدون تنبيه لزيارة طبيب.',
@@ -44,13 +90,8 @@ async function geminiReply(message: string, ctx: any) {
   ].join('\n')
 
   const payload = {
-    contents: [
-      {
-        role: 'user',
-        parts: [{ text: system + '\n\nسؤال المستخدم: ' + message }]
-      }
-    ],
-    generationConfig: { temperature: 0.4, maxOutputTokens: 220 }
+    contents: [{ role: 'user', parts: [{ text: system + '\n\nسؤال المستخدم: ' + message }] }],
+    generationConfig: { temperature: 0.35, maxOutputTokens: 240 }
   }
 
   const r = await fetch(url, {
@@ -62,30 +103,29 @@ async function geminiReply(message: string, ctx: any) {
   const data: any = await r.json().catch(() => ({}))
   if (!r.ok) throw new Error(data?.error?.message || `Gemini error (${r.status})`)
 
-  const text =
-    data?.candidates?.[0]?.content?.parts
-      ?.map((p: any) => p?.text)
-      .filter(Boolean)
-      .join('') || ''
-
+  const text = data?.candidates?.[0]?.content?.parts?.map((p: any) => p?.text).filter(Boolean).join('') || ''
   if (!text) throw new Error('Empty model response')
   return text.trim()
 }
 
 export default async function handler(req: any, res: any) {
-  if (req.method !== 'POST') return sendError(res, 405, 'METHOD_NOT_ALLOWED', 'Method not allowed')
-
-  const body = await readJsonBody(req)
-  const message = String(body?.message || '').trim()
-  if (!message) return sendError(res, 400, 'BAD_REQUEST', 'Message required')
-
-  const ctx = parsePatientContext(body?.context || {})
+  if (req.method !== 'POST') return sendJson(res, 405, { ok: false, code: 'METHOD_NOT_ALLOWED' })
 
   try {
-    const reply = await geminiReply(message, ctx)
-    return sendOk(res, { reply, provider: 'gemini' })
+    const body = await readJson(req)
+    const message = String(body?.message || '').trim()
+    if (!message) return sendJson(res, 400, { ok: false, code: 'BAD_REQUEST', message: 'Message required' })
+
+    const ctx = parseCtx(body?.context || {})
+
+    try {
+      const reply = await geminiReply(message, ctx)
+      return sendJson(res, 200, { ok: true, reply, provider: 'gemini' })
+    } catch (e: any) {
+      const reply = fallbackReply(message)
+      return sendJson(res, 200, { ok: true, reply, provider: 'fallback', warning: String(e?.message || e) })
+    }
   } catch (e: any) {
-    const reply = fallbackReply(message)
-    return sendOk(res, { reply, provider: 'fallback', warning: String(e?.message || e) })
+    return sendJson(res, 500, { ok: false, code: 'INTERNAL_ERROR', message: String(e?.message || e) })
   }
 }
