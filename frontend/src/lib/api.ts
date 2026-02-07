@@ -1,7 +1,7 @@
 import type { PatientContext, SearchResultBase } from '../types'
 
-const DEFAULT_API_BASE = 'http://127.0.0.1:3000/api'
-const FALLBACK_BASES = ['http://127.0.0.1:3000/api', 'http://127.0.0.1:3001/api']
+const DEFAULT_API_BASE = '/api'
+const FALLBACK_BASES: string[] = []
 
 const env = (import.meta as any).env || {}
 
@@ -62,9 +62,22 @@ export async function apiChat(message: string, context?: PatientContext): Promis
 }
 
 export async function apiOcr(image: File): Promise<string[]> {
-  const fd = new FormData()
-  fd.append('image', image)
-  const res = await fetchWithFallback('/ocr', { method: 'POST', body: fd })
+  const base64 = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const r = String(reader.result || '')
+      const idx = r.indexOf(',')
+      resolve(idx >= 0 ? r.slice(idx + 1) : r)
+    }
+    reader.onerror = () => reject(new Error('Failed to read image'))
+    reader.readAsDataURL(image)
+  })
+
+  const res = await fetchWithFallback('/ocr', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ image_base64: base64, mime: image.type || 'image/jpeg' })
+  })
   if (!res.ok) throw new Error(`OCR failed (${res.status})`)
   return await res.json()
 }
