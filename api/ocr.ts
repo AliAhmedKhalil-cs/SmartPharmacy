@@ -1,4 +1,6 @@
-export const config = { runtime: 'nodejs' }
+export const runtime = 'nodejs'
+export const preferredRegion = 'iad1'
+
 
 import { readJsonBody, sendError, sendOk } from './_util'
 

@@ -1,4 +1,5 @@
-export const config = { runtime: 'nodejs' }
+export const runtime = 'nodejs'
+export const preferredRegion = 'iad1'
 
 import { parsePatientContext, readJsonBody, sendError, sendOk } from './_util'
 
