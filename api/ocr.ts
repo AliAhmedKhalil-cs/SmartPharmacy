@@ -14,7 +14,9 @@ function looksLikeKey(k: string) {
 async function geminiOcr(imageBase64: string, mimeType: string) {
   const apiKey = keyFromEnv()
   if (!looksLikeKey(apiKey)) throw new Error('Invalid GEMINI_API_KEY')
+
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`
+
   const prompt = [
     'اقرأ الروشتة من الصورة واستخرج أسماء الأدوية فقط.',
     'رجّع النتيجة JSON Array من strings بدون أي كلام إضافي.',
@@ -34,16 +36,30 @@ async function geminiOcr(imageBase64: string, mimeType: string) {
     generationConfig: { temperature: 0.1, maxOutputTokens: 220 }
   }
 
-  const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+
   const data: any = await r.json().catch(() => ({}))
   if (!r.ok) throw new Error(data?.error?.message || `Gemini error (${r.status})`)
-  const text = data?.candidates?.[0]?.content?.parts?.map((p: any) => p?.text).filter(Boolean).join('') || '[]'
+
+  const text =
+    data?.candidates?.[0]?.content?.parts
+      ?.map((p: any) => p?.text)
+      .filter(Boolean)
+      .join('') || '[]'
+
   const parsed = JSON.parse(text)
-  return Array.isArray(parsed) ? parsed.map(x => String(x).trim()).filter(Boolean).slice(0, 30) : []
+  return Array.isArray(parsed)
+    ? parsed.map(x => String(x).trim()).filter(Boolean).slice(0, 30)
+    : []
 }
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') return sendError(res, 405, 'METHOD_NOT_ALLOWED', 'Method not allowed')
+
   const body = await readJsonBody(req)
   const imageBase64 = String(body?.image_base64 || '').trim()
   const mimeType = String(body?.mime || '').trim() || 'image/jpeg'

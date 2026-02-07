@@ -33,7 +33,9 @@ function fallbackReply(message: string) {
 async function geminiReply(message: string, ctx: any) {
   const apiKey = keyFromEnv()
   if (!looksLikeKey(apiKey)) throw new Error('Invalid GEMINI_API_KEY')
+
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`
+
   const system = [
     'أنت مساعد صيدلي عربي مصري. اجاباتك قصيرة، عملية، وآمنة.',
     'ممنوع التشخيص القاطع أو وصف أدوية روشتة بدون تنبيه لزيارة طبيب.',
@@ -43,7 +45,10 @@ async function geminiReply(message: string, ctx: any) {
 
   const payload = {
     contents: [
-      { role: 'user', parts: [{ text: system + '\n\nسؤال المستخدم: ' + message }] }
+      {
+        role: 'user',
+        parts: [{ text: system + '\n\nسؤال المستخدم: ' + message }]
+      }
     ],
     generationConfig: { temperature: 0.4, maxOutputTokens: 220 }
   }
@@ -55,21 +60,25 @@ async function geminiReply(message: string, ctx: any) {
   })
 
   const data: any = await r.json().catch(() => ({}))
-  if (!r.ok) {
-    const msg = data?.error?.message || `Gemini error (${r.status})`
-    throw new Error(msg)
-  }
+  if (!r.ok) throw new Error(data?.error?.message || `Gemini error (${r.status})`)
 
-  const text = data?.candidates?.[0]?.content?.parts?.map((p: any) => p?.text).filter(Boolean).join('') || ''
+  const text =
+    data?.candidates?.[0]?.content?.parts
+      ?.map((p: any) => p?.text)
+      .filter(Boolean)
+      .join('') || ''
+
   if (!text) throw new Error('Empty model response')
   return text.trim()
 }
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') return sendError(res, 405, 'METHOD_NOT_ALLOWED', 'Method not allowed')
+
   const body = await readJsonBody(req)
   const message = String(body?.message || '').trim()
   if (!message) return sendError(res, 400, 'BAD_REQUEST', 'Message required')
+
   const ctx = parsePatientContext(body?.context || {})
 
   try {
