@@ -8,6 +8,7 @@ import { AllergyControl } from './components/AllergyControl'
 import { ResultCard } from './components/ResultCard'
 import { ChatWidget } from './components/ChatWidget'
 import { CartDrawer } from './components/CartDrawer'
+import { CheckoutPage } from './components/CheckoutPage'
 import { PatientWizard } from './components/PatientWizard'
 import { PrescriptionValidator } from './components/PrescriptionValidator'
 import { apiChat, apiInteractionsCheck, apiOcr, apiSearch, apiReserveOrder } from './lib/api'
@@ -28,7 +29,9 @@ function toCartItem(x: SearchResultBase): CartItem | null {
 }
 
 export default function App() {
-  const [view, setView] = useState<'home' | 'search' | 'prescription' | 'allergy'>('home')
+  const [view, setView] = useState<'home' | 'search' | 'prescription' | 'allergy' | 'checkout'>('home')
+  const [returnView, setReturnView] = useState<'home' | 'search' | 'prescription' | 'allergy'>('home')
+  const [checkoutPharmacyId, setCheckoutPharmacyId] = useState<number | null>(null)
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<SearchResultBase[]>([])
   const [loading, setLoading] = useState(false)
@@ -42,6 +45,33 @@ export default function App() {
   const [error, setError] = useState<string>('')
 
   useEffect(() => {
+    const parse = () => {
+      const raw = String(window.location.hash || '').replace(/^#\/?/, '')
+      const key = raw.split('?')[0].replace(/^\//, '')
+      if (!key || key === '') return 'home'
+      if (key === 'search') return 'search'
+      if (key === 'prescription') return 'prescription'
+      if (key === 'allergy') return 'allergy'
+      if (key === 'checkout') return 'checkout'
+      return 'home'
+    }
+
+    const syncFromHash = () => {
+      const next = parse()
+      setView((cur) => (cur === next ? cur : next))
+    }
+
+    syncFromHash()
+    window.addEventListener('hashchange', syncFromHash)
+    return () => window.removeEventListener('hashchange', syncFromHash)
+  }, [])
+
+  useEffect(() => {
+    const next = view === 'home' ? '#/' : `#/${view}`
+    if (window.location.hash !== next) window.location.hash = next
+  }, [view])
+
+  useEffect(() => {
     const hasAny = (patient.allergies?.length || 0) + (patient.conditions?.length || 0) + (patient.currentMeds?.length || 0)
     const looksNew = !patient.age && !patient.weightKg && (!patient.sex || patient.sex === 'other') && hasAny === 0
     if (!profileDismissed && looksNew && !wizardOpen) setWizardOpen(true)
@@ -52,6 +82,7 @@ export default function App() {
       setPatient({ ...patient, allergies: legacyAllergens })
     }
   }, [legacyAllergens, patient, setPatient])
+
 
   const allergens = patient.allergies
 
@@ -64,7 +95,7 @@ export default function App() {
   }, [loading, error, query, results.length])
 
   async function doSearch(val?: string) {
-    setView('search')
+    go('search')
     const q = (val ?? query).trim()
     if (!q) return
     setError('')
@@ -81,7 +112,7 @@ export default function App() {
   }
 
   async function doOcr(file: File) {
-    setView('search')
+    go('search')
     setError('')
     setAnalyzing(true)
     try {
@@ -117,11 +148,23 @@ export default function App() {
       }
       setCart(next.slice(0, 12))
       setDrawerOpen(true)
+      setCheckoutPharmacyId(null)
     } catch {
       setError('في مشكلة اتصال… حاول تاني.')
     } finally {
       setLoading(false)
     }
+  }
+
+  function go(next: 'home' | 'search' | 'prescription' | 'allergy') {
+    setView(next)
+  }
+
+  function goCheckout(prefPharmacyId?: number | null) {
+    setCheckoutPharmacyId(prefPharmacyId ?? null)
+    setReturnView(view === 'checkout' ? 'home' : (view as any))
+    setDrawerOpen(false)
+    setView('checkout')
   }
 
   async function reserveFromCart(pharmacy_id: number) {
@@ -160,17 +203,26 @@ export default function App() {
         {view === 'home' ? (
           <AgentHome
             patient={patient}
-            onGoSearch={() => setView('search')}
-            onGoPrescription={() => setView('prescription')}
+            onGoSearch={() => go('search')}
+            onGoPrescription={() => go('prescription')}
             onGoAllergy={() => { setView('allergy'); setWizardOpen(true); setProfileDismissed(false) }}
             onOpenProfile={() => { setWizardOpen(true); setProfileDismissed(false) }}
+          />
+        ) : view === 'checkout' ? (
+          <CheckoutPage
+            items={cart}
+            patient={patient}
+            initialPharmacyId={checkoutPharmacyId}
+            onBack={() => { setView(returnView); setDrawerOpen(true) }}
+            onDone={() => { setView('home'); setDrawerOpen(false) }}
+            onClearCart={() => setCart([])}
           />
         ) : (
           <>
             <div className="sp-toprow">
               <AllergyControl allergens={allergens} onChange={(vals) => setPatient({ ...patient, allergies: vals })} />
               <div className="sp-toprow__right">
-                <button className="sp-pill" onClick={() => setView('home')} type="button">🏠 الرئيسية</button>
+                <button className="sp-pill" onClick={() => go('home')} type="button">🏠 الرئيسية</button>
                 <button className="sp-pill primary" onClick={() => setDrawerOpen(true)} type="button">
                   🧪 تفاعلات ({cart.length})
                 </button>
@@ -187,8 +239,8 @@ export default function App() {
                   loading={loading}
                   analyzing={analyzing}
                   mode={view}
-                  onGoSearch={() => setView('search')}
-                  onGoPrescription={() => setView('prescription')}
+                  onGoSearch={() => go('search')}
+                  onGoPrescription={() => go('prescription')}
                 />
 
                 {loading && <div className="sp-loading">🔄 جاري البحث…</div>}
@@ -208,7 +260,7 @@ export default function App() {
                 </section>
               </>
             ) : view === 'prescription' ? (
-              <PrescriptionValidator patient={patient} onGoSearch={() => setView('search')} onAddToCart={addRxToCart} />
+              <PrescriptionValidator patient={patient} onGoSearch={() => go('search')} onAddToCart={addRxToCart} />
             ) : (
               <div className="sp-empty">اختار من الرئيسية: بحث أو روشتة.</div>
             )}
@@ -219,9 +271,14 @@ export default function App() {
       <CartDrawer
         items={cart}
         open={drawerOpen}
+        patient={patient}
         onClose={() => setDrawerOpen(false)}
+        onCheckout={() => goCheckout()}
         onRemove={(id) => setCart(cart.filter(x => x.drug_id !== id))}
+        onClear={() => setCart([])}
+        onSetQty={(id, qty) => setCart(cart.map(x => x.drug_id === id ? { ...x, qty } : x))}
         onCheck={checkInteractions}
+        onReserve={async (pharmacy_id) => { setCheckoutPharmacy(pharmacy_id); const out = await reserveFromCart(pharmacy_id); return out }}
       />
 
       <ChatWidget onSend={(text) => apiChat(text, patient)} />

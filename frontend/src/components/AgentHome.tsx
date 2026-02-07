@@ -33,6 +33,41 @@ export function AgentHome({ patient, onGoSearch, onGoPrescription, onGoAllergy, 
         </div>
       </div>
 
+      <div className="sp-journey" aria-label="User Journey">
+        <div className="sp-journey__left">
+          <div className="sp-journey__title">رحلتك في 3 خطوات</div>
+          <div className="sp-journey__desc">من أول صورة للروشتة لحد حجز الدوا من صيدلية قريبة… كله بسلاسة.</div>
+          <div className="sp-journey__actions">
+            <button className="sp-btn" onClick={onGoPrescription} type="button">ابدأ بالروشتة</button>
+            <button className="sp-btn ghost" onClick={onOpenProfile} type="button">ظبط الملف الطبي</button>
+          </div>
+        </div>
+
+        <div className="sp-journey__steps">
+          <div className="sp-jourstep">
+            <div className="sp-jourstep__num">1</div>
+            <div className="sp-jourstep__body">
+              <div className="sp-jourstep__title">رفع الروشتة / بحث</div>
+              <div className="sp-jourstep__text">صوّر الروشتة أو اكتب اسم الدواء</div>
+            </div>
+          </div>
+          <div className="sp-jourstep">
+            <div className="sp-jourstep__num">2</div>
+            <div className="sp-jourstep__body">
+              <div className="sp-jourstep__title">تحليل ذكي</div>
+              <div className="sp-jourstep__text">تحذيرات حساسية + تفاعلات + بدائل</div>
+            </div>
+          </div>
+          <div className="sp-jourstep">
+            <div className="sp-jourstep__num">3</div>
+            <div className="sp-jourstep__body">
+              <div className="sp-jourstep__title">سلة وحجز</div>
+              <div className="sp-jourstep__text">ضيف للسلة واحجز من صيدلية مناسبة</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="sp-agent__grid">
         <button className="sp-agentcard" onClick={onGoPrescription} type="button">
           <div className="sp-agentcard__icon">🧾</div>
