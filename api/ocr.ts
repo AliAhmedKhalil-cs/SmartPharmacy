@@ -1,12 +1,32 @@
 export const runtime = 'nodejs'
-export const preferredRegion = 'iad1'
 
+function sendJson(res: any, status: number, payload: any) {
+  res.statusCode = status
+  res.setHeader('Content-Type', 'application/json; charset=utf-8')
+  res.end(JSON.stringify(payload))
+}
 
-import { readJsonBody, sendError, sendOk } from './_util'
+function readBody(req: any): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let data = ''
+    req.on('data', (c: any) => (data += c))
+    req.on('end', () => resolve(data))
+    req.on('error', reject)
+  })
+}
+
+async function readJson(req: any) {
+  const raw = await readBody(req)
+  if (!raw) return {}
+  try {
+    return JSON.parse(raw)
+  } catch {
+    return {}
+  }
+}
 
 function keyFromEnv() {
-  const k = String(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim()
-  return k
+  return String(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim()
 }
 
 function looksLikeKey(k: string) {
@@ -39,7 +59,12 @@ async function geminiOcr(imageBase64: string, mimeType: string) {
     generationConfig: { temperature: 0.1, maxOutputTokens: 220 }
   }
 
-  const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+
   const data: any = await r.json().catch(() => ({}))
   if (!r.ok) throw new Error(data?.error?.message || `Gemini error (${r.status})`)
 
@@ -49,21 +74,21 @@ async function geminiOcr(imageBase64: string, mimeType: string) {
 }
 
 export default async function handler(req: any, res: any) {
-  if (req.method !== 'POST') return sendError(res, 405, 'METHOD_NOT_ALLOWED', 'Method not allowed')
+  if (req.method !== 'POST') return sendJson(res, 405, { ok: false, code: 'METHOD_NOT_ALLOWED' })
 
   try {
-    const body = await readJsonBody(req)
+    const body = await readJson(req)
     const imageBase64 = String(body?.image_base64 || '').trim()
     const mimeType = String(body?.mime || '').trim() || 'image/jpeg'
-    if (!imageBase64) return sendError(res, 400, 'BAD_REQUEST', 'image_base64 required')
+    if (!imageBase64) return sendJson(res, 400, { ok: false, code: 'BAD_REQUEST', message: 'image_base64 required' })
 
     try {
       const meds = await geminiOcr(imageBase64, mimeType)
-      return sendOk(res, meds)
+      return sendJson(res, 200, meds)
     } catch {
-      return sendOk(res, [])
+      return sendJson(res, 200, [])
     }
   } catch (e: any) {
-    return sendError(res, 500, 'INTERNAL_ERROR', String(e?.message || e))
+    return sendJson(res, 500, { ok: false, code: 'INTERNAL_ERROR', message: String(e?.message || e) })
   }
 }
