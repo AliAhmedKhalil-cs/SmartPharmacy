@@ -1,53 +1,47 @@
-export const runtime = 'nodejs'
-
-function sendJson(res: any, status: number, payload: any) {
+function sendJson(res, status, payload) {
   res.statusCode = status
   res.setHeader('Content-Type', 'application/json; charset=utf-8')
   res.end(JSON.stringify(payload))
 }
 
-function readBody(req: any): Promise<string> {
+function readBody(req) {
   return new Promise((resolve, reject) => {
     let data = ''
-    req.on('data', (c: any) => (data += c))
+    req.on('data', c => (data += c))
     req.on('end', () => resolve(data))
     req.on('error', reject)
   })
 }
 
-async function readJson(req: any) {
+async function readJson(req) {
   const raw = await readBody(req)
   if (!raw) return {}
-  try {
-    return JSON.parse(raw)
-  } catch {
-    return {}
-  }
+  try { return JSON.parse(raw) } catch { return {} }
 }
 
 function keyFromEnv() {
   return String(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim()
 }
 
-function looksLikeKey(k: string) {
+function looksLikeKey(k) {
   if (!k) return false
   if (k.length < 30) return false
   return /^[A-Za-z0-9_\-]+$/.test(k)
 }
 
-function normalizeList(v: any) {
+function normalizeList(v) {
   if (!v) return []
   if (Array.isArray(v)) return v.map(x => String(x).trim()).filter(Boolean).slice(0, 50)
   return String(v).split(',').map(s => s.trim()).filter(Boolean).slice(0, 50)
 }
 
-function parseCtx(ctx: any) {
-  const age = ctx?.age !== undefined ? Number(ctx.age) : undefined
-  const weightKg = ctx?.weightKg !== undefined ? Number(ctx.weightKg) : undefined
-  const sex = ctx?.sex ? String(ctx.sex) : undefined
-  const allergies = normalizeList(ctx?.allergies)
-  const conditions = normalizeList(ctx?.conditions)
-  const currentMeds = normalizeList(ctx?.currentMeds)
+function parseCtx(ctx) {
+  const age = ctx && ctx.age !== undefined ? Number(ctx.age) : undefined
+  const weightKg = ctx && ctx.weightKg !== undefined ? Number(ctx.weightKg) : undefined
+  const sex = ctx && ctx.sex ? String(ctx.sex) : undefined
+  const allergies = normalizeList(ctx && ctx.allergies)
+  const conditions = normalizeList(ctx && ctx.conditions)
+  const currentMeds = normalizeList(ctx && ctx.currentMeds)
   return {
     age: Number.isFinite(age) ? age : undefined,
     weightKg: Number.isFinite(weightKg) ? weightKg : undefined,
@@ -58,26 +52,26 @@ function parseCtx(ctx: any) {
   }
 }
 
-function ctxText(ctx: any) {
-  const parts: string[] = []
-  if (ctx?.age !== undefined) parts.push(`العمر: ${ctx.age}`)
-  if (ctx?.sex) parts.push(`النوع: ${ctx.sex}`)
-  if (ctx?.weightKg !== undefined) parts.push(`الوزن: ${ctx.weightKg}kg`)
-  if (ctx?.allergies?.length) parts.push(`حساسية: ${ctx.allergies.join('، ')}`)
-  if (ctx?.conditions?.length) parts.push(`حالات مزمنة: ${ctx.conditions.join('، ')}`)
-  if (ctx?.currentMeds?.length) parts.push(`أدوية حالية: ${ctx.currentMeds.join('، ')}`)
+function ctxText(ctx) {
+  const parts = []
+  if (ctx && ctx.age !== undefined) parts.push(`العمر: ${ctx.age}`)
+  if (ctx && ctx.sex) parts.push(`النوع: ${ctx.sex}`)
+  if (ctx && ctx.weightKg !== undefined) parts.push(`الوزن: ${ctx.weightKg}kg`)
+  if (ctx && ctx.allergies && ctx.allergies.length) parts.push(`حساسية: ${ctx.allergies.join('، ')}`)
+  if (ctx && ctx.conditions && ctx.conditions.length) parts.push(`حالات مزمنة: ${ctx.conditions.join('، ')}`)
+  if (ctx && ctx.currentMeds && ctx.currentMeds.length) parts.push(`أدوية حالية: ${ctx.currentMeds.join('، ')}`)
   return parts.length ? parts.join(' | ') : 'لا يوجد'
 }
 
-function fallbackReply(message: string) {
-  const m = message.toLowerCase()
-  if (m.includes('حساسي') || m.includes('allerg')) return 'تمام. قولّي الحساسية من اي مادة فعالة تحديدًا (زي paracetamol/ibuprofen) + سنك وأي أمراض مزمنة، وأنا أرشح بدائل OTC آمنة مع تحذيرات.'
+function fallbackReply(message) {
+  const m = String(message || '').toLowerCase()
+  if (m.includes('حساسي') || m.includes('allerg')) return 'تمام. قولّي الحساسية من اي مادة فعالة تحديدًا + سنك وأي أمراض مزمنة، وأنا أرشح بدائل OTC آمنة مع تحذيرات.'
   if (m.includes('جرعة') || m.includes('dose')) return 'الجرعة بتعتمد على العمر والوزن والحالة. قولّي اسم الدوا + العمر/الوزن وأي أمراض مزمنة.'
   if (m.includes('مضاد') || m.includes('antibi')) return 'المضاد الحيوي لازم بوصفة. لو فيه حساسية/طفح/ضيق نفس لازم طوارئ.'
   return 'تمام. احكيلي الأعراض أو اسم الدوا اللي بتسأل عنه، ولو عندك حساسية أو أمراض مزمنة قولّي عشان الرد يبقى أدق.'
 }
 
-async function geminiReply(message: string, ctx: any) {
+async function geminiReply(message, ctx) {
   const apiKey = keyFromEnv()
   if (!looksLikeKey(apiKey)) throw new Error('Invalid GEMINI_API_KEY')
 
@@ -100,32 +94,33 @@ async function geminiReply(message: string, ctx: any) {
     body: JSON.stringify(payload)
   })
 
-  const data: any = await r.json().catch(() => ({}))
-  if (!r.ok) throw new Error(data?.error?.message || `Gemini error (${r.status})`)
+  const data = await r.json().catch(() => ({}))
+  if (!r.ok) throw new Error((data && data.error && data.error.message) || `Gemini error (${r.status})`)
 
-  const text = data?.candidates?.[0]?.content?.parts?.map((p: any) => p?.text).filter(Boolean).join('') || ''
+  const parts = data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
+  const text = Array.isArray(parts) ? parts.map(p => p && p.text).filter(Boolean).join('') : ''
   if (!text) throw new Error('Empty model response')
-  return text.trim()
+  return String(text).trim()
 }
 
-export default async function handler(req: any, res: any) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return sendJson(res, 405, { ok: false, code: 'METHOD_NOT_ALLOWED' })
 
   try {
     const body = await readJson(req)
-    const message = String(body?.message || '').trim()
+    const message = String(body && body.message || '').trim()
     if (!message) return sendJson(res, 400, { ok: false, code: 'BAD_REQUEST', message: 'Message required' })
 
-    const ctx = parseCtx(body?.context || {})
+    const ctx = parseCtx((body && body.context) || {})
 
     try {
       const reply = await geminiReply(message, ctx)
       return sendJson(res, 200, { ok: true, reply, provider: 'gemini' })
-    } catch (e: any) {
+    } catch (e) {
       const reply = fallbackReply(message)
-      return sendJson(res, 200, { ok: true, reply, provider: 'fallback', warning: String(e?.message || e) })
+      return sendJson(res, 200, { ok: true, reply, provider: 'fallback', warning: String((e && e.message) || e) })
     }
-  } catch (e: any) {
-    return sendJson(res, 500, { ok: false, code: 'INTERNAL_ERROR', message: String(e?.message || e) })
+  } catch (e) {
+    return sendJson(res, 500, { ok: false, code: 'INTERNAL_ERROR', message: String((e && e.message) || e) })
   }
 }
