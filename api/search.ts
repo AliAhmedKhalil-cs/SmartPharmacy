@@ -1,25 +1,28 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { handleCors, enableCors, searchDrugs } from './_util'
+import { handleCors, sendError, sendOk, searchDrugs } from './_util'
+
+export const config = {
+  runtime: 'nodejs'
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (handleCors(req, res)) return
+  
+  if (req.method !== 'GET') {
+    return sendError(res, 405, 'METHOD_NOT_ALLOWED', 'Only GET allowed')
+  }
   
   try {
     const q = String(req.query.q || '').trim()
     
     if (!q) {
-      enableCors(res)
-      return res.status(400).json({ error: 'Query parameter required' })
+      return sendError(res, 400, 'BAD_REQUEST', 'Query parameter "q" is required')
     }
     
-    // Call your search function from _util
     const results = await searchDrugs(q)
-    
-    enableCors(res)
-    res.status(200).json(results)
+    return sendOk(res, results)
   } catch (error: any) {
     console.error('Search error:', error)
-    enableCors(res)
-    res.status(500).json({ error: { message: error.message || 'Search failed' } })
+    return sendError(res, 500, 'INTERNAL_ERROR', error.message || 'Search failed')
   }
 }
