@@ -1,28 +1,8 @@
-export const runtime = 'nodejs'
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { handleCors, sendJson, readJsonBody } from './_util'
 
-function sendJson(res: any, status: number, payload: any) {
-  res.statusCode = status
-  res.setHeader('Content-Type', 'application/json; charset=utf-8')
-  res.end(JSON.stringify(payload))
-}
-
-function readBody(req: any): Promise<string> {
-  return new Promise((resolve, reject) => {
-    let data = ''
-    req.on('data', (c: any) => (data += c))
-    req.on('end', () => resolve(data))
-    req.on('error', reject)
-  })
-}
-
-async function readJson(req: any) {
-  const raw = await readBody(req)
-  if (!raw) return {}
-  try {
-    return JSON.parse(raw)
-  } catch {
-    return {}
-  }
+export const config = {
+  runtime: 'nodejs'
 }
 
 function keyFromEnv() {
@@ -30,9 +10,7 @@ function keyFromEnv() {
 }
 
 function looksLikeKey(k: string) {
-  if (!k) return false
-  if (k.length < 30) return false
-  return /^[A-Za-z0-9_\-]+$/.test(k)
+  return k && k.length >= 30 && /^[A-Za-z0-9_\-]+$/.test(k)
 }
 
 async function geminiOcr(imageBase64: string, mimeType: string) {
@@ -47,15 +25,13 @@ async function geminiOcr(imageBase64: string, mimeType: string) {
   ].join('\n')
 
   const payload = {
-    contents: [
-      {
-        role: 'user',
-        parts: [
-          { text: prompt },
-          { inline_data: { mime_type: mimeType, data: imageBase64 } }
-        ]
-      }
-    ],
+    contents: [{
+      role: 'user',
+      parts: [
+        { text: prompt },
+        { inline_data: { mime_type: mimeType, data: imageBase64 } }
+      ]
+    }],
     generationConfig: { temperature: 0.1, maxOutputTokens: 220 }
   }
 
@@ -73,14 +49,21 @@ async function geminiOcr(imageBase64: string, mimeType: string) {
   return Array.isArray(parsed) ? parsed.map(x => String(x).trim()).filter(Boolean).slice(0, 30) : []
 }
 
-export default async function handler(req: any, res: any) {
-  if (req.method !== 'POST') return sendJson(res, 405, { ok: false, code: 'METHOD_NOT_ALLOWED' })
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (handleCors(req, res)) return
+  
+  if (req.method !== 'POST') {
+    return sendJson(res, 405, { ok: false, code: 'METHOD_NOT_ALLOWED' })
+  }
 
   try {
-    const body = await readJson(req)
+    const body = await readJsonBody(req)
     const imageBase64 = String(body?.image_base64 || '').trim()
     const mimeType = String(body?.mime || '').trim() || 'image/jpeg'
-    if (!imageBase64) return sendJson(res, 400, { ok: false, code: 'BAD_REQUEST', message: 'image_base64 required' })
+    
+    if (!imageBase64) {
+      return sendJson(res, 400, { ok: false, code: 'BAD_REQUEST', message: 'image_base64 required' })
+    }
 
     try {
       const meds = await geminiOcr(imageBase64, mimeType)
