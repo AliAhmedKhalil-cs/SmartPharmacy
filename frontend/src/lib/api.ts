@@ -1,20 +1,24 @@
 import type { PatientContext, SearchResultBase } from '../types'
 
-// Determine the API base URL based on environment
+// Determine environment
 const isDevelopment = import.meta.env.DEV
 const isProduction = import.meta.env.PROD
 
-// In production (Vercel), use relative path since frontend and API are on same domain
-// In development, use localhost backend or environment variable
+// In development, use localhost FIRST
 const DEFAULT_API_BASE = isDevelopment 
-  ? '/api'  // Proxy will handle this in dev
+  ? '/api'  // Proxy to localhost:3001
   : '/api'  // Same domain in production
 
-const FALLBACK_BASES: string[] = [
-  'https://smart-pharmacy-fgng.vercel.app/api',
-  'http://127.0.0.1:3000/api',
-  'http://localhost:3000/api'
-]
+const FALLBACK_BASES: string[] = isDevelopment 
+  ? [
+      'http://127.0.0.1:3001/api',  // ← غيّر من 3000 إلى 3001
+      'http://localhost:3001/api',
+      'http://127.0.0.1:3000/api',
+      'http://localhost:3000/api'
+    ]
+  : [
+      'https://smart-pharmacy-fgng.vercel.app/api'
+    ]
 
 const env = import.meta.env || {}
 
@@ -25,34 +29,30 @@ function isAbsolute(url: string) {
 let runtimeBase: string | null = null
 
 export const API_BASE_URL: string = (() => {
-  // Check for explicit environment variable
   const envBase = String(env.VITE_API_BASE_URL || env.VITE_API_BASE || '').trim()
   
   if (envBase) {
-    // If it's an absolute URL, use it directly
     if (isAbsolute(envBase)) {
       return envBase.replace(/\/+$/, '').replace(/\/api$/, '') + '/api'
     }
-    // If it starts with /, it's a relative path
     if (envBase.startsWith('/')) {
       return envBase.replace(/\/+$/, '')
     }
   }
   
-  // Use default based on environment
   return DEFAULT_API_BASE
 })()
 
 function candidates() {
   const base = runtimeBase || API_BASE_URL
   
-  // In production, prefer the relative path first
-  if (isProduction) {
-    return ['/api', ...FALLBACK_BASES.filter(fb => fb !== '/api')]
+  // In development, prefer localhost
+  if (isDevelopment) {
+    return [base, ...FALLBACK_BASES].filter(Boolean)
   }
   
-  // In development, try proxy first, then fallbacks
-  const list = [base, ...FALLBACK_BASES].filter(Boolean)
+  // In production, prefer relative path
+  const list = ['/api', ...FALLBACK_BASES].filter(Boolean)
   return Array.from(new Set(list))
 }
 
@@ -76,6 +76,7 @@ async function fetchWithFallback(path: string, init?: RequestInit) {
   let lastErr: any = null
   const candidateList = candidates()
   
+  console.log(`[API] Environment: ${isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION'}`)
   console.log(`[API] Attempting request to: ${path}`)
   console.log(`[API] Candidates:`, candidateList)
   
@@ -96,22 +97,19 @@ async function fetchWithFallback(path: string, init?: RequestInit) {
       
       if (res.ok) {
         runtimeBase = base
-        console.log(`[API] Success! Using base: ${base}`)
+        console.log(`[API] ✅ Success! Using base: ${base}`)
         return res
       }
       
-      // If 404 or network error, try next fallback
       if (res.status === 404 || res.status === 0) {
         lastErr = new Error(`Not found (${res.status})`)
         continue
       }
       
-      // For other errors (500, etc), still return the response
-      // so we can read the error message
       runtimeBase = base
       return res
     } catch (e: any) {
-      console.warn(`[API] Failed for ${base}: ${e.message}`)
+      console.warn(`[API] ❌ Failed for ${base}: ${e.message}`)
       lastErr = e
       continue
     }
@@ -223,7 +221,6 @@ export async function apiReserveOrder(pharmacy_id: number, items: ReserveItem[],
   return data as ReserveResponse
 }
 
-// Health check utility
 export async function apiHealthCheck(): Promise<boolean> {
   try {
     const res = await fetchWithFallback('/health')
