@@ -1,1 +1,6 @@
-{ "type": "commonjs" }
+{
+  "type": "commonjs",
+  "dependencies": {
+    "@vercel/node": "^3.0.0"
+  }
+}
