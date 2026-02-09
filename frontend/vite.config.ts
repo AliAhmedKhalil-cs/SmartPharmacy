@@ -5,6 +5,7 @@ const target = process.env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:3000'
 
 export default defineConfig({
   plugins: [react()],
+  base: '/',
   server: {
     host: '127.0.0.1',
     port: 5173,
@@ -15,5 +16,9 @@ export default defineConfig({
         secure: false
       }
     }
+  },
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true
   }
 })
