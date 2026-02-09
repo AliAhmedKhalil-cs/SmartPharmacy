@@ -1,19 +1,26 @@
 import sqlite3 from 'sqlite3'
 import { open, Database } from 'sqlite'
 import path from 'path'
+import os from 'os'
 
 let dbPromise: Promise<Database> | null = null
 
+const dbFile = process.env.NODE_ENV === 'production'
+  ? path.join(os.tmpdir(), 'smartpharmacy.db')
+  : path.join(process.cwd(), 'database.sqlite')
+
 export async function getDb(): Promise<Database> {
   if (!dbPromise) {
-    const filename = path.join(process.cwd(), 'database.sqlite')
-    dbPromise = open({ filename, driver: sqlite3.Database })
+    dbPromise = open({ filename: dbFile, driver: sqlite3.Database })
   }
   return await dbPromise
 }
 
 export async function ensureCoreTables(): Promise<void> {
   const db = await getDb()
+  
+  await db.exec('PRAGMA foreign_keys = ON;')
+
   await db.exec(`
     CREATE TABLE IF NOT EXISTS interaction_rules (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
