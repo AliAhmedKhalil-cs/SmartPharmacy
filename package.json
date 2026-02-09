@@ -2,25 +2,14 @@
   "name": "smartpharmacy",
   "version": "1.0.0",
   "description": "SmartPharmacy - Drug Search and Management System",
-  "main": "index.js",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
-    "dev": "cd frontend && npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "cd frontend && npm install && npm run build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AliAhmedKhalil-cs/SmartPharmacy.git"
+  "dependencies": {
+    "@vercel/node": "^3.0.0"
   },
-  "keywords": ["pharmacy", "drugs", "healthcare", "search"],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/AliAhmedKhalil-cs/SmartPharmacy/issues"
-  },
-  "homepage": "https://github.com/AliAhmedKhalil-cs/SmartPharmacy#readme",
   "devDependencies": {
-    "@types/node": "^25.2.1",
+    "@types/node": "^20.0.0",
     "typescript": "^5.9.3"
   }
 }
