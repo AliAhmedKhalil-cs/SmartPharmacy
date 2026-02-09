@@ -48,6 +48,10 @@ app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 },
 }))
 
+app.get('/', (_req, res) => {
+  res.json({ ok: true, name: 'smartpharmacy-api', base: '/api' })
+})
+
 app.use('/api', apiRoutes)
 
 app.use(errorHandler)

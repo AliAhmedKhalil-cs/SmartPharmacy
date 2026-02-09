@@ -10,9 +10,6 @@ import { validatePrescription } from '../services/prescriptionValidator.js'
 import { fallbackChatAnswer } from '../services/fallbackChat.js'
 import { ApiError } from '../middleware/errorHandler.js'
 
-// @ts-ignore
-import fetch from 'node-fetch'
-
 dotenv.config()
 
 const router = Router()
