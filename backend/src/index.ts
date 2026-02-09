@@ -13,6 +13,10 @@ dotenv.config()
 const app = express()
 const PORT = Number(process.env.PORT || 3000)
 
+ensureCoreTables().catch(err => {
+  console.error('Database initialization failed:', err)
+})
+
 app.set('trust proxy', 1)
 
 app.use(requestContext)
@@ -21,7 +25,13 @@ app.use((req, res, next) => {
   const start = Date.now()
   res.on('finish', () => {
     const ms = Date.now() - start
-    log('info', 'request', { requestId: req.ctx?.requestId, method: req.method, path: req.path, status: res.statusCode, ms })
+    log('info', 'request', { 
+      requestId: req.ctx?.requestId, 
+      method: req.method, 
+      path: req.path, 
+      status: res.statusCode, 
+      ms 
+    })
   })
   next()
 })
@@ -34,37 +44,18 @@ app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
 app.use(fileUpload({
-  limits: { fileSize: 10 * 1024 * 1024 },
-  abortOnLimit: true,
-  createParentPath: true
+  createParentPath: true,
+  limits: { fileSize: 50 * 1024 * 1024 },
 }))
 
-app.get('/', (_req, res) => {
-  res.json({ ok: true, name: 'smartpharmacy-api', base: '/api' })
-})
-
 app.use('/api', apiRoutes)
+
 app.use(errorHandler)
 
-ensureCoreTables()
-  .then(() => {
-    const start = (port: number) => {
-      const server = app.listen(port, '127.0.0.1', () => { log('info', 'server_started', { port }) })
-      server.on('error', (err: any) => {
-        const code = err?.code ? String(err.code) : ''
-        if ((code === 'EACCES' || code === 'EADDRINUSE') && port === PORT) {
-          const nextPort = PORT + 1
-          log('error', 'port_unavailable', { port, nextPort, code })
-          start(nextPort)
-          return
-        }
-        log('error', 'server_failed', { message: err instanceof Error ? err.message : String(err) })
-        process.exit(1)
-      })
-    }
-    start(PORT)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
   })
-  .catch((e) => {
-    log('error', 'server_failed', { message: e instanceof Error ? e.message : String(e) })
-    process.exit(1)
-  })
+}
+
+export default app
