@@ -1,28 +1,8 @@
-export const runtime = 'nodejs'
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { handleCors, sendJson, readJsonBody, parsePatientContext } from './_util'
 
-function sendJson(res: any, status: number, payload: any) {
-  res.statusCode = status
-  res.setHeader('Content-Type', 'application/json; charset=utf-8')
-  res.end(JSON.stringify(payload))
-}
-
-function readBody(req: any): Promise<string> {
-  return new Promise((resolve, reject) => {
-    let data = ''
-    req.on('data', (c: any) => (data += c))
-    req.on('end', () => resolve(data))
-    req.on('error', reject)
-  })
-}
-
-async function readJson(req: any) {
-  const raw = await readBody(req)
-  if (!raw) return {}
-  try {
-    return JSON.parse(raw)
-  } catch {
-    return {}
-  }
+export const config = {
+  runtime: 'nodejs'
 }
 
 function keyFromEnv() {
@@ -30,32 +10,7 @@ function keyFromEnv() {
 }
 
 function looksLikeKey(k: string) {
-  if (!k) return false
-  if (k.length < 30) return false
-  return /^[A-Za-z0-9_\-]+$/.test(k)
-}
-
-function normalizeList(v: any) {
-  if (!v) return []
-  if (Array.isArray(v)) return v.map(x => String(x).trim()).filter(Boolean).slice(0, 50)
-  return String(v).split(',').map(s => s.trim()).filter(Boolean).slice(0, 50)
-}
-
-function parseCtx(ctx: any) {
-  const age = ctx?.age !== undefined ? Number(ctx.age) : undefined
-  const weightKg = ctx?.weightKg !== undefined ? Number(ctx.weightKg) : undefined
-  const sex = ctx?.sex ? String(ctx.sex) : undefined
-  const allergies = normalizeList(ctx?.allergies)
-  const conditions = normalizeList(ctx?.conditions)
-  const currentMeds = normalizeList(ctx?.currentMeds)
-  return {
-    age: Number.isFinite(age) ? age : undefined,
-    weightKg: Number.isFinite(weightKg) ? weightKg : undefined,
-    sex,
-    allergies,
-    conditions,
-    currentMeds
-  }
+  return k && k.length >= 30 && /^[A-Za-z0-9_\-]+$/.test(k)
 }
 
 function ctxText(ctx: any) {
@@ -71,9 +26,12 @@ function ctxText(ctx: any) {
 
 function fallbackReply(message: string) {
   const m = message.toLowerCase()
-  if (m.includes('حساسي') || m.includes('allerg')) return 'تمام. قولّي الحساسية من اي مادة فعالة تحديدًا (زي paracetamol/ibuprofen) + سنك وأي أمراض مزمنة، وأنا أرشح بدائل OTC آمنة مع تحذيرات.'
-  if (m.includes('جرعة') || m.includes('dose')) return 'الجرعة بتعتمد على العمر والوزن والحالة. قولّي اسم الدوا + العمر/الوزن وأي أمراض مزمنة.'
-  if (m.includes('مضاد') || m.includes('antibi')) return 'المضاد الحيوي لازم بوصفة. لو فيه حساسية/طفح/ضيق نفس لازم طوارئ.'
+  if (m.includes('حساسي') || m.includes('allerg')) 
+    return 'تمام. قولّي الحساسية من اي مادة فعالة تحديدًا (زي paracetamol/ibuprofen) + سنك وأي أمراض مزمنة، وأنا أرشح بدائل OTC آمنة مع تحذيرات.'
+  if (m.includes('جرعة') || m.includes('dose')) 
+    return 'الجرعة بتعتمد على العمر والوزن والحالة. قولّي اسم الدوا + العمر/الوزن وأي أمراض مزمنة.'
+  if (m.includes('مضاد') || m.includes('antibi')) 
+    return 'المضاد الحيوي لازم بوصفة. لو فيه حساسية/طفح/ضيق نفس لازم طوارئ.'
   return 'تمام. احكيلي الأعراض أو اسم الدوا اللي بتسأل عنه، ولو عندك حساسية أو أمراض مزمنة قولّي عشان الرد يبقى أدق.'
 }
 
@@ -108,15 +66,22 @@ async function geminiReply(message: string, ctx: any) {
   return text.trim()
 }
 
-export default async function handler(req: any, res: any) {
-  if (req.method !== 'POST') return sendJson(res, 405, { ok: false, code: 'METHOD_NOT_ALLOWED' })
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (handleCors(req, res)) return
+  
+  if (req.method !== 'POST') {
+    return sendJson(res, 405, { ok: false, code: 'METHOD_NOT_ALLOWED' })
+  }
 
   try {
-    const body = await readJson(req)
+    const body = await readJsonBody(req)
     const message = String(body?.message || '').trim()
-    if (!message) return sendJson(res, 400, { ok: false, code: 'BAD_REQUEST', message: 'Message required' })
+    
+    if (!message) {
+      return sendJson(res, 400, { ok: false, code: 'BAD_REQUEST', message: 'Message required' })
+    }
 
-    const ctx = parseCtx(body?.context || {})
+    const ctx = parsePatientContext(body?.context || {})
 
     try {
       const reply = await geminiReply(message, ctx)
