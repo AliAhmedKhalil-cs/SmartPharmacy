@@ -1,3 +1,5 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+
 export type PatientContext = {
   age?: number
   sex?: 'male' | 'female' | 'other'
@@ -7,28 +9,55 @@ export type PatientContext = {
   currentMeds?: string[]
 }
 
-export function sendJson(res: any, status: number, data: any) {
-  res.statusCode = status
-  res.setHeader('Content-Type', 'application/json; charset=utf-8')
-  res.end(JSON.stringify(data))
+// ============= CORS Helpers =============
+export function enableCors(res: VercelResponse) {
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version')
 }
 
-export function sendOk(res: any, data: any) {
+export function handleCors(req: VercelRequest, res: VercelResponse): boolean {
+  enableCors(res)
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return true
+  }
+  return false
+}
+
+// ============= Response Helpers =============
+export function sendJson(res: VercelResponse, status: number, data: any) {
+  enableCors(res)
+  res.status(status).json(data)
+}
+
+export function sendOk(res: VercelResponse, data: any) {
   sendJson(res, 200, data)
 }
 
-export function sendError(res: any, status: number, code: string, message: string, detail?: any) {
+export function sendError(res: VercelResponse, status: number, code: string, message: string, detail?: any) {
   sendJson(res, status, { error: { code, message, detail } })
 }
 
-export async function readJsonBody(req: any): Promise<any> {
+// ============= Request Helpers =============
+export async function readJsonBody(req: VercelRequest): Promise<any> {
+  if (req.body) return req.body
+  
   const chunks: Buffer[] = []
-  for await (const chunk of req) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
+  for await (const chunk of req) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
+  }
   if (!chunks.length) return {}
   const raw = Buffer.concat(chunks).toString('utf8')
-  try { return JSON.parse(raw) } catch { return {} }
+  try { 
+    return JSON.parse(raw) 
+  } catch { 
+    return {} 
+  }
 }
 
+// ============= Validation Helpers =============
 export function norm(s: string) {
   return String(s || '').toLowerCase().trim()
 }
@@ -91,6 +120,7 @@ export function randomOrderCode() {
   return `SP-${a}-${b}`
 }
 
+// ============= CSV Drug Loading =============
 export type CsvDrug = {
   drug_id: string
   trade_name: string
@@ -118,37 +148,56 @@ let cachedDrugs: CsvDrug[] | null = null
 
 export async function loadDrugs(): Promise<CsvDrug[]> {
   if (cachedDrugs) return cachedDrugs
-  const fs = await import('fs/promises')
-  const path = await import('path')
-  const p1 = path.join(process.cwd(), 'data', 'drugs_eg.csv')
-  const p2 = path.join(process.cwd(), 'data', 'drugs_import.csv')
-  const filePath = await fs.access(p1).then(() => p1).catch(() => p2)
-  const raw = await fs.readFile(filePath, 'utf8')
-  const lines = raw.split(/\r?\n/).filter(Boolean)
-  const header = splitCsvLine(lines[0]).map(norm)
-  const idx = (name: string) => header.indexOf(norm(name))
-  const iTrade = idx('trade_name')
-  const iActive = idx('active_ingredient')
-  const iGroup = idx('therapeutic_group')
-  const iPrice = idx('avg_price')
-  const iForm = idx('form')
-  const drugs: CsvDrug[] = []
-  for (let i = 1; i < lines.length; i++) {
-    const cols = splitCsvLine(lines[i])
-    const trade = cols[iTrade] || ''
-    const active = cols[iActive] || ''
-    if (!trade || !active) continue
-    const avg = Number(cols[iPrice] || '')
-    drugs.push({
-      drug_id: String(i),
-      trade_name: trade,
-      active_ingredient: active,
-      therapeutic_group: cols[iGroup] || '',
-      avg_price: Number.isFinite(avg) ? avg : undefined,
-      form: cols[iForm] || ''
-    })
-    if (drugs.length >= 15000) break
+  
+  try {
+    const fs = await import('fs/promises')
+    const path = await import('path')
+    const p1 = path.join(process.cwd(), 'data', 'drugs_eg.csv')
+    const p2 = path.join(process.cwd(), 'data', 'drugs_import.csv')
+    const filePath = await fs.access(p1).then(() => p1).catch(() => p2)
+    const raw = await fs.readFile(filePath, 'utf8')
+    const lines = raw.split(/\r?\n/).filter(Boolean)
+    const header = splitCsvLine(lines[0]).map(norm)
+    const idx = (name: string) => header.indexOf(norm(name))
+    const iTrade = idx('trade_name')
+    const iActive = idx('active_ingredient')
+    const iGroup = idx('therapeutic_group')
+    const iPrice = idx('avg_price')
+    const iForm = idx('form')
+    const drugs: CsvDrug[] = []
+    
+    for (let i = 1; i < lines.length; i++) {
+      const cols = splitCsvLine(lines[i])
+      const trade = cols[iTrade] || ''
+      const active = cols[iActive] || ''
+      if (!trade || !active) continue
+      const avg = Number(cols[iPrice] || '')
+      drugs.push({
+        drug_id: String(i),
+        trade_name: trade,
+        active_ingredient: active,
+        therapeutic_group: cols[iGroup] || '',
+        avg_price: Number.isFinite(avg) ? avg : undefined,
+        form: cols[iForm] || ''
+      })
+      if (drugs.length >= 15000) break
+    }
+    cachedDrugs = drugs
+    return drugs
+  } catch (error) {
+    console.error('Failed to load drugs:', error)
+    return []
   }
-  cachedDrugs = drugs
-  return drugs
+}
+
+// ============= Search Function =============
+export async function searchDrugs(query: string): Promise<CsvDrug[]> {
+  const drugs = await loadDrugs()
+  const q = norm(query)
+  if (!q) return []
+  
+  return drugs.filter(drug => 
+    norm(drug.trade_name).includes(q) || 
+    norm(drug.active_ingredient).includes(q)
+  ).slice(0, 50)
 }
