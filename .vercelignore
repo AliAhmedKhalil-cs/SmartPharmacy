@@ -24,6 +24,5 @@ docker-compose.yml
 ops/
 .env.local
 
-# Frontend source (if exists)
-frontend/node_modules/
-frontend/dist/
+# Keep frontend folder - we need it!
+# frontend/ is NOT ignored
