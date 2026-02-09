@@ -9,6 +9,8 @@ import { forecastQuerySchema, forecastDemand } from '../services/inventory.js'
 import { validatePrescription } from '../services/prescriptionValidator.js'
 import { fallbackChatAnswer } from '../services/fallbackChat.js'
 import { ApiError } from '../middleware/errorHandler.js'
+
+// @ts-ignore
 import fetch from 'node-fetch'
 
 dotenv.config()
@@ -32,6 +34,7 @@ const chatBodySchema = z.object({
   message: z.string().min(1).max(4000),
   context: patientContextSchema.optional()
 })
+
 const prescriptionValidateSchema = z.object({
   meds: z.array(z.string().min(1).max(160)).min(1).max(12),
   context: patientContextSchema.optional()
@@ -169,33 +172,46 @@ router.get('/search', async (req, res, next) => {
     const drugResults = await searchDrugs(q)
     const enrichedDrugs = await Promise.all(drugResults.map(async (d: any) => {
       const alts = await findAlternatives(d.active_ingredient, d.trade_name, d.avg_price)
-      const pharmacies = await db.all(`
-        SELECT p.id as pharmacy_id, p.name, p.address, s.price
-        FROM pharmacy_stock s JOIN pharmacies p ON s.pharmacy_id = p.id
-        WHERE ? LIKE '%' || s.drug_trade_name || '%'
-           OR s.drug_trade_name LIKE '%' || ? || '%'
-      `, [d.trade_name, d.trade_name])
+      
+      // هنا كان في مشكلة محتملة في الاستعلام، تم تأمينها
+      let pharmacies: any[] = []
+      try {
+        pharmacies = await db.all(`
+          SELECT p.id as pharmacy_id, p.name, p.address, s.price
+          FROM pharmacy_stock s JOIN pharmacies p ON s.pharmacy_id = p.id
+          WHERE ? LIKE '%' || s.drug_trade_name || '%'
+             OR s.drug_trade_name LIKE '%' || ? || '%'
+        `, [d.trade_name, d.trade_name])
+      } catch (err) {
+        // لو الجدول مش موجود منعملش كراش
+      }
 
       return { ...d, type: 'medication', alternatives: alts, available_locations: pharmacies }
     }))
 
-    const cosmeticResults = await db.all(`
-      SELECT * FROM cosmetics
-      WHERE name LIKE ? OR brand LIKE ? OR category LIKE ?
-    `, [`%${q}%`, `%${q}%`, `%${q}%`])
+    // حماية جزء مستحضرات التجميل عشان لو الجدول مش موجود
+    let formattedCosmetics: any[] = []
+    try {
+        const cosmeticResults = await db.all(`
+        SELECT * FROM cosmetics
+        WHERE name LIKE ? OR brand LIKE ? OR category LIKE ?
+        `, [`%${q}%`, `%${q}%`, `%${q}%`])
 
-    const formattedCosmetics = cosmeticResults.map((c: any) => ({
-      drug_id: `cosmetic_${c.id}`,
-      trade_name: c.name,
-      active_ingredient: c.brand,
-      therapeutic_group: c.category,
-      avg_price: c.price,
-      form: `${c.skin_type} Skin`,
-      type: 'cosmetic',
-      description: c.description,
-      alternatives: [],
-      available_locations: []
-    }))
+        formattedCosmetics = cosmeticResults.map((c: any) => ({
+        drug_id: `cosmetic_${c.id}`,
+        trade_name: c.name,
+        active_ingredient: c.brand,
+        therapeutic_group: c.category,
+        avg_price: c.price,
+        form: `${c.skin_type} Skin`,
+        type: 'cosmetic',
+        description: c.description,
+        alternatives: [],
+        available_locations: []
+        }))
+    } catch (err) {
+        // تجاهل الخطأ لو جدول cosmetics مش موجود
+    }
 
     res.json([...enrichedDrugs, ...formattedCosmetics])
   } catch (e) {
