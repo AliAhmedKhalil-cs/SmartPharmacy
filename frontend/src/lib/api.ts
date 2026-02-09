@@ -1,7 +1,9 @@
 import type { PatientContext, SearchResultBase } from '../types'
 
 const DEFAULT_API_BASE = '/api'
-const FALLBACK_BASES: string[] = []
+const FALLBACK_BASES: string[] = [
+  'https://smart-pharmacy-fgng.vercel.app/api'
+]
 
 const env = (import.meta as any).env || {}
 
@@ -15,7 +17,9 @@ export const API_BASE_URL: string = (() => {
   const v = String(env.VITE_API_BASE_URL || env.VITE_API_BASE || '').trim()
   if (!v) return DEFAULT_API_BASE
   if (v.startsWith('/')) return DEFAULT_API_BASE
-  return v
+  const trimmed = v.replace(/\/+$/, '')
+  if (trimmed.endsWith('/api')) return trimmed
+  return `${trimmed}/api`
 })()
 
 function candidates() {
@@ -35,6 +39,14 @@ async function fetchWithFallback(path: string, init?: RequestInit) {
   for (const base of candidates()) {
     try {
       const res = await fetch(`${base}${path}`, init)
+      if (res.ok) {
+        runtimeBase = base
+        return res
+      }
+      if (res.status === 404 || res.status === 0) {
+        lastErr = new Error(`Request failed (${res.status})`)
+        continue
+      }
       runtimeBase = base
       return res
     } catch (e) {
