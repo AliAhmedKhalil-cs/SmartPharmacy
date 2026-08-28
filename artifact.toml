@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "SmartPharmacy"
+version = "1.0.0"
+id = "artifacts/smartpharmacy"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23363
+
+[services.development]
+run = "pnpm --filter @workspace/smartpharmacy run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/smartpharmacy", "run", "build" ]
+publicDir = "artifacts/smartpharmacy/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23363"
+BASE_PATH = "/"
